@@ -13,16 +13,7 @@
         "Initialize ZK verification program with payment validation config",
         "This creates the payment config PDA with expected payment details"
       ],
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
       "accounts": [
         {
           "name": "payment_config",
@@ -32,19 +23,7 @@
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  121,
-                  109,
-                  101,
-                  110,
-                  116,
-                  95,
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
+                  112, 97, 121, 109, 101, 110, 116, 95, 99, 111, 110, 102, 105,
                   103
                 ]
               },
@@ -87,16 +66,7 @@
         "This transaction is small because it only checks PDA (no large proof data)",
         "The verification result PDA is reusable - can verify new proof and mint again"
       ],
-      "discriminator": [
-        232,
-        160,
-        147,
-        32,
-        63,
-        0,
-        35,
-        226
-      ],
+      "discriminator": [232, 160, 147, 32, 63, 0, 35, 226],
       "accounts": [
         {
           "name": "signer",
@@ -105,27 +75,14 @@
         },
         {
           "name": "verification_result",
-          "docs": [
-            "Verification result PDA (reusable for multiple mints)"
-          ],
+          "docs": ["Verification result PDA (reusable for multiple mints)"],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  118,
-                  101,
-                  114,
-                  105,
-                  102,
-                  105,
-                  99,
-                  97,
-                  116,
-                  105,
-                  111,
-                  110
+                  118, 101, 114, 105, 102, 105, 99, 97, 116, 105, 111, 110
                 ]
               },
               {
@@ -137,9 +94,7 @@
         },
         {
           "name": "mint",
-          "docs": [
-            "New NFT mint"
-          ],
+          "docs": ["New NFT mint"],
           "writable": true,
           "signer": true
         },
@@ -160,38 +115,20 @@
         },
         {
           "name": "collection_mint",
-          "docs": [
-            "Collection mint"
-          ],
+          "docs": ["Collection mint"],
           "writable": true
         },
         {
           "name": "collection_state",
-          "docs": [
-            "Collection state (price 정보 포함)"
-          ],
+          "docs": ["Collection state (price 정보 포함)"],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  99,
-                  111,
-                  108,
-                  108,
-                  101,
-                  99,
-                  116,
-                  105,
-                  111,
-                  110,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
+                  99, 111, 108, 108, 101, 99, 116, 105, 111, 110, 95, 115, 116,
+                  97, 116, 101
                 ]
               },
               {
@@ -207,22 +144,16 @@
         },
         {
           "name": "collection_metadata",
-          "docs": [
-            "Collection metadata (Metaplex)"
-          ],
+          "docs": ["Collection metadata (Metaplex)"],
           "writable": true
         },
         {
           "name": "collection_master_edition",
-          "docs": [
-            "Collection master edition"
-          ]
+          "docs": ["Collection master edition"]
         },
         {
           "name": "sysvar_instruction",
-          "docs": [
-            "Sysvar instruction account"
-          ],
+          "docs": ["Sysvar instruction account"],
           "address": "Sysvar1nstructions1111111111111111111111111"
         },
         {
@@ -254,16 +185,7 @@
         "This separates large proof verification from NFT minting to solve transaction size issues",
         "Each unique claim_identifier gets its own PDA, allowing multiple verifications per user"
       ],
-      "discriminator": [
-        217,
-        211,
-        191,
-        110,
-        144,
-        13,
-        186,
-        98
-      ],
+      "discriminator": [217, 211, 191, 110, 144, 13, 186, 98],
       "accounts": [
         {
           "name": "signer",
@@ -278,18 +200,7 @@
               {
                 "kind": "const",
                 "value": [
-                  118,
-                  101,
-                  114,
-                  105,
-                  102,
-                  105,
-                  99,
-                  97,
-                  116,
-                  105,
-                  111,
-                  110
+                  118, 101, 114, 105, 102, 105, 99, 97, 116, 105, 111, 110
                 ]
               },
               {
@@ -333,16 +244,7 @@
         "2. Mint NFT via CPI to spl-nft",
         "Note: Payment validation happens off-chain before calling this function"
       ],
-      "discriminator": [
-        147,
-        203,
-        157,
-        77,
-        210,
-        140,
-        1,
-        78
-      ],
+      "discriminator": [147, 203, 157, 77, 210, 140, 1, 78],
       "accounts": [
         {
           "name": "signer",
@@ -351,9 +253,7 @@
         },
         {
           "name": "mint",
-          "docs": [
-            "New NFT mint"
-          ],
+          "docs": ["New NFT mint"],
           "writable": true,
           "signer": true
         },
@@ -374,38 +274,20 @@
         },
         {
           "name": "collection_mint",
-          "docs": [
-            "Collection mint"
-          ],
+          "docs": ["Collection mint"],
           "writable": true
         },
         {
           "name": "collection_state",
-          "docs": [
-            "Collection state (price 정보 포함)"
-          ],
+          "docs": ["Collection state (price 정보 포함)"],
           "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  99,
-                  111,
-                  108,
-                  108,
-                  101,
-                  99,
-                  116,
-                  105,
-                  111,
-                  110,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101
+                  99, 111, 108, 108, 101, 99, 116, 105, 111, 110, 95, 115, 116,
+                  97, 116, 101
                 ]
               },
               {
@@ -466,16 +348,7 @@
         "Verify proof without payment validation (for unit testing)",
         "This exposes the internal proof verification logic"
       ],
-      "discriminator": [
-        91,
-        4,
-        171,
-        117,
-        80,
-        113,
-        185,
-        40
-      ],
+      "discriminator": [91, 4, 171, 117, 80, 113, 185, 40],
       "accounts": [
         {
           "name": "signer",
@@ -518,16 +391,7 @@
         "* `expected_witnesses` - List of valid witness addresses",
         "* `required_threshold` - Minimum number of valid signatures required"
       ],
-      "discriminator": [
-        211,
-        201,
-        70,
-        37,
-        35,
-        35,
-        133,
-        191
-      ],
+      "discriminator": [211, 201, 70, 37, 35, 35, 133, 191],
       "accounts": [
         {
           "name": "signer",
@@ -540,19 +404,7 @@
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  97,
-                  121,
-                  109,
-                  101,
-                  110,
-                  116,
-                  95,
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
+                  112, 97, 121, 109, 101, 110, 116, 95, 99, 111, 110, 102, 105,
                   103
                 ]
               },
@@ -589,42 +441,15 @@
   "accounts": [
     {
       "name": "CollectionState",
-      "discriminator": [
-        228,
-        135,
-        148,
-        4,
-        244,
-        41,
-        118,
-        165
-      ]
+      "discriminator": [228, 135, 148, 4, 244, 41, 118, 165]
     },
     {
       "name": "PaymentConfig",
-      "discriminator": [
-        252,
-        166,
-        185,
-        239,
-        186,
-        79,
-        212,
-        152
-      ]
+      "discriminator": [252, 166, 185, 239, 186, 79, 212, 152]
     },
     {
       "name": "VerificationResult",
-      "discriminator": [
-        104,
-        111,
-        80,
-        172,
-        219,
-        191,
-        162,
-        38
-      ]
+      "discriminator": [104, 111, 80, 172, 219, 191, 162, 38]
     }
   ],
   "errors": [
@@ -784,9 +609,7 @@
     },
     {
       "name": "PaymentConfig",
-      "docs": [
-        "Payment validation configuration"
-      ],
+      "docs": ["Payment validation configuration"],
       "type": {
         "kind": "struct",
         "fields": [
@@ -811,9 +634,7 @@
     },
     {
       "name": "Proof",
-      "docs": [
-        "Complete proof structure (zk-escrow compatible)"
-      ],
+      "docs": ["Complete proof structure (zk-escrow compatible)"],
       "type": {
         "kind": "struct",
         "fields": [
@@ -838,9 +659,7 @@
     },
     {
       "name": "SignedClaim",
-      "docs": [
-        "Signed claim containing claim data and signatures"
-      ],
+      "docs": ["Signed claim containing claim data and signatures"],
       "type": {
         "kind": "struct",
         "fields": [
@@ -872,30 +691,22 @@
         "fields": [
           {
             "name": "user",
-            "docs": [
-              "User who verified the proof"
-            ],
+            "docs": ["User who verified the proof"],
             "type": "pubkey"
           },
           {
             "name": "verified_at",
-            "docs": [
-              "Timestamp when verification was completed"
-            ],
+            "docs": ["Timestamp when verification was completed"],
             "type": "i64"
           },
           {
             "name": "claim_identifier",
-            "docs": [
-              "Claim identifier from the verified proof"
-            ],
+            "docs": ["Claim identifier from the verified proof"],
             "type": "string"
           },
           {
             "name": "is_used",
-            "docs": [
-              "Whether this verification has been used for minting"
-            ],
+            "docs": ["Whether this verification has been used for minting"],
             "type": "bool"
           }
         ]

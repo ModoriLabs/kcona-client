@@ -13,16 +13,7 @@
         "Check if a nullifier has been used (read-only)",
         "This is called via CPI from other programs"
       ],
-      "discriminator": [
-        27,
-        96,
-        60,
-        156,
-        54,
-        225,
-        221,
-        73
-      ],
+      "discriminator": [27, 96, 60, 156, 54, 225, 221, 73],
       "accounts": [
         {
           "name": "nullifier_record",
@@ -30,17 +21,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  110,
-                  117,
-                  108,
-                  108,
-                  105,
-                  102,
-                  105,
-                  101,
-                  114
-                ]
+                "value": [110, 117, 108, 108, 105, 102, 105, 101, 114]
               },
               {
                 "kind": "arg",
@@ -59,19 +40,8 @@
     },
     {
       "name": "initialize",
-      "docs": [
-        "Initialize the nullifier registry"
-      ],
-      "discriminator": [
-        175,
-        175,
-        109,
-        31,
-        13,
-        152,
-        155,
-        237
-      ],
+      "docs": ["Initialize the nullifier registry"],
+      "discriminator": [175, 175, 109, 31, 13, 152, 155, 237],
       "accounts": [
         {
           "name": "registry",
@@ -81,24 +51,8 @@
               {
                 "kind": "const",
                 "value": [
-                  110,
-                  117,
-                  108,
-                  108,
-                  105,
-                  102,
-                  105,
-                  101,
-                  114,
-                  95,
-                  114,
-                  101,
-                  103,
-                  105,
-                  115,
-                  116,
-                  114,
-                  121
+                  110, 117, 108, 108, 105, 102, 105, 101, 114, 95, 114, 101,
+                  103, 105, 115, 116, 114, 121
                 ]
               }
             ]
@@ -122,16 +76,7 @@
         "Mark a nullifier as used",
         "This prevents replay attacks by ensuring each proof can only be used once"
       ],
-      "discriminator": [
-        84,
-        1,
-        121,
-        190,
-        181,
-        180,
-        1,
-        185
-      ],
+      "discriminator": [84, 1, 121, 190, 181, 180, 1, 185],
       "accounts": [
         {
           "name": "registry",
@@ -141,24 +86,8 @@
               {
                 "kind": "const",
                 "value": [
-                  110,
-                  117,
-                  108,
-                  108,
-                  105,
-                  102,
-                  105,
-                  101,
-                  114,
-                  95,
-                  114,
-                  101,
-                  103,
-                  105,
-                  115,
-                  116,
-                  114,
-                  121
+                  110, 117, 108, 108, 105, 102, 105, 101, 114, 95, 114, 101,
+                  103, 105, 115, 116, 114, 121
                 ]
               }
             ]
@@ -171,17 +100,7 @@
             "seeds": [
               {
                 "kind": "const",
-                "value": [
-                  110,
-                  117,
-                  108,
-                  108,
-                  105,
-                  102,
-                  105,
-                  101,
-                  114
-                ]
+                "value": [110, 117, 108, 108, 105, 102, 105, 101, 114]
               },
               {
                 "kind": "arg",
@@ -211,29 +130,11 @@
   "accounts": [
     {
       "name": "NullifierRecord",
-      "discriminator": [
-        56,
-        18,
-        57,
-        175,
-        69,
-        202,
-        189,
-        70
-      ]
+      "discriminator": [56, 18, 57, 175, 69, 202, 189, 70]
     },
     {
       "name": "NullifierRegistry",
-      "discriminator": [
-        100,
-        229,
-        171,
-        224,
-        85,
-        171,
-        147,
-        206
-      ]
+      "discriminator": [100, 229, 171, 224, 85, 171, 147, 206]
     }
   ],
   "errors": [
@@ -256,9 +157,7 @@
   "types": [
     {
       "name": "NullifierRecord",
-      "docs": [
-        "Individual nullifier record"
-      ],
+      "docs": ["Individual nullifier record"],
       "type": {
         "kind": "struct",
         "fields": [
@@ -279,9 +178,7 @@
     },
     {
       "name": "NullifierRegistry",
-      "docs": [
-        "Global nullifier registry"
-      ],
+      "docs": ["Global nullifier registry"],
       "type": {
         "kind": "struct",
         "fields": [
