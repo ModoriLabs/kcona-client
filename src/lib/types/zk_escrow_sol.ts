@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/zk_escrow_sol.json`.
  */
 export type ZkEscrowSol = {
-  address: '944j5oBiD7kTvS2j2hYow4oq5MFLbPXaGF7ZHUG2Fpbu'
+  address: '3EgB44qFrL2gZhi24oiw6kqV6YTdg1i8hdG9nNxHLUzK'
   metadata: {
     name: 'zkEscrowSol'
     version: '0.1.0'

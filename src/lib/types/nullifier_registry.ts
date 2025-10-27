@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/nullifier_registry.json`.
  */
 export type NullifierRegistry = {
-  address: 'J3tkLEXB6vvj9wKDbsKFcUiCma82Hw5iV2qTjvNGsofh'
+  address: 'BvHdh8mMnXq9EnhrVD6Q1i1eR4SavuHnxZFXCCoCAuoZ'
   metadata: {
     name: 'nullifierRegistry'
     version: '0.1.0'
