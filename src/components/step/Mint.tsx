@@ -21,9 +21,9 @@ import {
 } from '@solana/spl-token'
 import { AnchorProvider, Program, setProvider } from '@coral-xyz/anchor'
 import { ProofResult } from './Proof'
-import { convertProofToAnchor } from '@/lib/proofUtils'
-import { ZkEscrowSol } from '@/lib/types/zk_escrow_sol'
-import zkEscrowIdlJson from '@/lib/idl/zk_escrow_sol.json'
+import { convertProofToAnchor } from 'src/lib/proofUtils'
+import { ZkEscrowSol } from 'src/lib/types/zk_escrow_sol'
+import zkEscrowIdlJson from 'src/lib/idl/zk_escrow_sol.json'
 import {
   ZK_ESCROW_PROGRAM_ID,
   SPL_NFT_PROGRAM_ID,
@@ -35,7 +35,7 @@ import {
   findMintAuthorityPda,
   findMetadataPda,
   findMasterEditionPda,
-} from '@/constants'
+} from 'src/constants'
 
 export function Mint({
   proofResult,

@@ -11,7 +11,7 @@ import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
-import { SOLANA_RPC_ENDPOINT, SOLANA_CLUSTER } from '@/constants'
+import { SOLANA_RPC_ENDPOINT, SOLANA_CLUSTER } from 'src/constants'
 
 // Import wallet adapter styles
 import '@solana/wallet-adapter-react-ui/styles.css'

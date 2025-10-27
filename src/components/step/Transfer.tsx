@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { getTossBankQRCode, TOSS_ACCOUNT_NUMBER } from '@/constants'
+import { getTossBankQRCode, TOSS_ACCOUNT_NUMBER } from 'src/constants'
 
 export function Transfer({ onNext }: { onNext: () => void }) {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)

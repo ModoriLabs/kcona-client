@@ -2,7 +2,7 @@
 
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { SOLANA_CLUSTER, isLocalnet, isDevnet, isMainnet } from '@/constants'
+import { SOLANA_CLUSTER, isLocalnet, isDevnet, isMainnet } from 'src/constants'
 
 export function Connect() {
   const { connected, publicKey } = useWallet()
