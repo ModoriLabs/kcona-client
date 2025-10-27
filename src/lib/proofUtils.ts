@@ -1,4 +1,4 @@
-import { ProofResult } from '@/components/step/Proof'
+import { ProofResult } from 'src/components/step/Proof'
 import { BN } from '@coral-xyz/anchor'
 
 /**
