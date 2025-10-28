@@ -44,9 +44,9 @@ export function Proof({
   proofResult: ProofResult | null
   setProofResult: (proof: ProofResult) => void
 }) {
-  const [issueDate, setIssueDate] = useState('20251027')
+  const [issueDate, setIssueDate] = useState('20241028')
   const [certificateNumber, setCertificateNumber] =
-    useState('3281-ANDR-RDSXMCXX')
+    useState('9312-ANEF-IOMUQZJD')
   const [isLoading, setIsLoading] = useState(false)
   const [validationErrors, setValidationErrors] = useState<{
     issueDate?: string

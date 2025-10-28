@@ -3,8 +3,9 @@
 import { useEffect, useRef } from 'react'
 
 import React from 'react'
-import ToastContent from 'src/components/counter/ToastContent'
+import { ToastContent } from 'src/components/ToastContent'
 import { toast } from 'sonner'
+import { SOLANA_CLUSTER } from 'src/constants'
 
 interface UseTransactionToastProps {
   transactionSignature: string | null
@@ -21,7 +22,9 @@ export function useTransactionToast({
   // Display toast when transaction signature is available
   useEffect(() => {
     if (transactionSignature) {
-      const explorerUrl = `https://explorer.solana.com/tx/${transactionSignature}?cluster=devnet`
+      const cluster =
+        SOLANA_CLUSTER === 'mainnet-beta' ? '' : `?cluster=${SOLANA_CLUSTER}`
+      const explorerUrl = `https://explorer.solana.com/tx/${transactionSignature}${cluster}`
 
       // Dismiss previous toast if exists
       if (toastIdRef.current) {

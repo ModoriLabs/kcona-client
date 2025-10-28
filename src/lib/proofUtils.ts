@@ -18,7 +18,7 @@ export type AnchorProof = {
       timestampS: BN
       epoch: BN
     }
-    signatures: Uint8Array[]
+    signatures: Buffer[]
   }
 }
 
@@ -31,6 +31,7 @@ export function convertProofToAnchor(proofResult: ProofResult): AnchorProof {
   }
 
   const { receipt } = proofResult.data
+  console.log('receipt', receipt)
 
   // Debug: Log the raw claim data
   console.log('=== Raw Claim Data ===')
@@ -53,21 +54,17 @@ export function convertProofToAnchor(proofResult: ProofResult): AnchorProof {
     throw new Error('epoch is missing from claim data')
   }
 
-  // Convert signatures from Buffer objects to Uint8Array
-  const signatures: Uint8Array[] = []
+  // Convert claimSignature from Buffer objects to Buffer (required by Anchor)
+  const signatures: Buffer[] = []
 
   if (receipt.signatures.claimSignature) {
-    signatures.push(new Uint8Array(receipt.signatures.claimSignature.data))
+    const claimSig = Buffer.from(receipt.signatures.claimSignature.data)
+    console.log('claimSignature length:', claimSig.length)
+    if (claimSig.length !== 65) {
+      throw new Error(`claimSignature must be 65 bytes, got ${claimSig.length}`)
+    }
+    signatures.push(claimSig)
   }
-
-  if (receipt.signatures.resultSignature) {
-    signatures.push(new Uint8Array(receipt.signatures.resultSignature.data))
-  }
-
-  console.log('Converted signatures:', {
-    count: signatures.length,
-    lengths: signatures.map((s) => s.length),
-  })
 
   // Convert to BN with explicit type checking
   let timestampBN: BN

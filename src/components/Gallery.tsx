@@ -5,6 +5,7 @@ import { isLocalnet, SOLANA_CLUSTER } from 'src/constants'
 
 export function Gallery() {
   const { nfts, isLoading, error, refetch } = useNfts()
+  console.log('nfts', nfts)
 
   if (isLoading) {
     return (
@@ -69,19 +70,33 @@ export function Gallery() {
             className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-md">
             {/* NFT Image Placeholder */}
             <div className="flex h-48 items-center justify-center bg-gradient-to-br from-blue-100 to-purple-100">
-              <div className="text-6xl">🎨</div>
+              <img
+                src={nft.metadata.uri}
+                alt={nft.name}
+                className="h-full w-full object-cover"
+              />
             </div>
 
             {/* NFT Info */}
             <div className="p-4">
               <h3 className="mb-2 font-semibold">{nft.name}</h3>
-              <p className="mb-3 text-xs text-gray-500">Symbol: {nft.symbol}</p>
+              <p className="mb-3 text-xs text-gray-500">
+                Symbol: {nft.metadata.symbol}
+              </p>
 
               {/* Mint Address */}
               <div className="mb-3 rounded bg-gray-50 p-2">
                 <p className="text-xs text-gray-500">Mint Address</p>
                 <p className="break-all font-mono text-xs text-gray-700">
                   {nft.mint}
+                </p>
+              </div>
+
+              {/* NFT URI */}
+              <div className="mb-3 rounded bg-gray-50 p-2">
+                <p className="text-xs text-gray-500">URI</p>
+                <p className="break-all font-mono text-xs text-gray-700">
+                  {nft.metadata.uri}
                 </p>
               </div>
 

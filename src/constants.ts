@@ -1,4 +1,8 @@
 import { PublicKey, clusterApiUrl } from '@solana/web3.js'
+import * as anchor from '@coral-xyz/anchor'
+import zkEscrowIdl from 'src/lib/idl/zk_escrow_sol.json'
+import nftIdl from 'src/lib/idl/spl_nft.json'
+import nullifierRegistryIdl from 'src/lib/idl/nullifier_registry.json'
 
 // =============================================================================
 // Solana Network Configuration
@@ -24,42 +28,31 @@ export const isMainnet = SOLANA_CLUSTER === 'mainnet-beta'
 // =============================================================================
 
 // ZK Escrow Program - Main verification and minting logic
-export const ZK_ESCROW_PROGRAM_ID = new PublicKey(
-  process.env.NEXT_PUBLIC_ZK_ESCROW_PROGRAM_ID ||
-    '944j5oBiD7kTvS2j2hYow4oq5MFLbPXaGF7ZHUG2Fpbu',
-)
+export const ZK_ESCROW_PROGRAM_ID = new PublicKey(zkEscrowIdl.address)
 
 // SPL NFT Program - NFT collection and minting
-export const SPL_NFT_PROGRAM_ID = new PublicKey(
-  process.env.NEXT_PUBLIC_SPL_NFT_PROGRAM_ID ||
-    '99hrQQHRwNoEFaaDyE8NoVmXykFTuPuhEgUYfq8J6dr1',
-)
+export const SPL_NFT_PROGRAM_ID = new PublicKey(nftIdl.address)
 
 // Nullifier Registry Program - Prevent proof replay
 export const NULLIFIER_REGISTRY_PROGRAM_ID = new PublicKey(
-  process.env.NEXT_PUBLIC_NULLIFIER_REGISTRY_PROGRAM_ID ||
-    'J3tkLEXB6vvj9wKDbsKFcUiCma82Hw5iV2qTjvNGsofh',
+  nullifierRegistryIdl.address,
 )
 
-// Metaplex Token Metadata Program (Standard)
-export const TOKEN_METADATA_PROGRAM_ID = new PublicKey(
-  process.env.NEXT_PUBLIC_TOKEN_METADATA_PROGRAM_ID ||
-    'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
+// TODO: is it works both devnet and mainnet?
+export const TOKEN_METADATA_PROGRAM = new PublicKey(
+  'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
 )
 
+export const COLLECTION_MINT = new PublicKey(
+  process.env.NEXT_PUBLIC_COLLECTION_MINT || '',
+)
 // =============================================================================
 // NFT Collection Configuration
 // =============================================================================
 
-// Collection Mint Address (must be set after creating collection)
-const collectionMintEnv = process.env.NEXT_PUBLIC_COLLECTION_MINT
-export const COLLECTION_MINT = collectionMintEnv
-  ? new PublicKey(collectionMintEnv)
-  : null
-
 // Validate collection mint is set in production
-if (isMainnet && !COLLECTION_MINT) {
-  console.warn('⚠️ COLLECTION_MINT is not set in production environment')
+if (isMainnet && !TOKEN_METADATA_PROGRAM) {
+  console.warn('⚠️ TOKEN_METADATA_PROGRAM is not set in production environment')
 }
 
 // =============================================================================
@@ -139,117 +132,79 @@ export const SKIP_PREFLIGHT = process.env.NEXT_PUBLIC_SKIP_PREFLIGHT === 'true'
  * Find Payment Config PDA
  * Seeds: ["payment_config", authority]
  */
-export function findPaymentConfigPda(
+
+export const getPaymentConfig = async (
   authority: PublicKey,
-): [PublicKey, number] {
-  return PublicKey.findProgramAddressSync(
+): Promise<anchor.web3.PublicKey> => {
+  return anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from(SEEDS.PAYMENT_CONFIG), authority.toBuffer()],
     ZK_ESCROW_PROGRAM_ID,
-  )
+  )[0]
 }
 
 /**
  * Find Verification Result PDA
  * Seeds: ["verification", user]
  */
-export function findVerificationResultPda(
+export const getVerificationResult = async (
   user: PublicKey,
-): [PublicKey, number] {
-  return PublicKey.findProgramAddressSync(
+): Promise<anchor.web3.PublicKey> => {
+  return anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from(SEEDS.VERIFICATION), user.toBuffer()],
     ZK_ESCROW_PROGRAM_ID,
-  )
+  )[0]
 }
 
 /**
  * Find Collection State PDA
  * Seeds: ["collection_state", collection_mint]
  */
-export function findCollectionStatePda(
+export const getCollectionState = async (
   collectionMint: PublicKey,
-): [PublicKey, number] {
-  return PublicKey.findProgramAddressSync(
+): Promise<anchor.web3.PublicKey> => {
+  return anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from(SEEDS.COLLECTION_STATE), collectionMint.toBuffer()],
     SPL_NFT_PROGRAM_ID,
-  )
+  )[0]
 }
 
-/**
- * Find Mint Authority PDA
- * Seeds: ["authority"]
- */
-export function findMintAuthorityPda(): [PublicKey, number] {
-  return PublicKey.findProgramAddressSync(
+export const getMintAuthority = async (): Promise<anchor.web3.PublicKey> => {
+  return anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from(SEEDS.MINT_AUTHORITY)],
     SPL_NFT_PROGRAM_ID,
-  )
+  )[0]
 }
 
-/**
- * Find Metadata PDA (Metaplex)
- * Seeds: ["metadata", token_metadata_program_id, mint]
- */
-export function findMetadataPda(mint: PublicKey): [PublicKey, number] {
-  return PublicKey.findProgramAddressSync(
+export const getMetadata = async (
+  mint: anchor.web3.PublicKey,
+): Promise<anchor.web3.PublicKey> => {
+  return anchor.web3.PublicKey.findProgramAddressSync(
     [
-      Buffer.from(SEEDS.METADATA),
-      TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+      Buffer.from('metadata'),
+      TOKEN_METADATA_PROGRAM.toBuffer(),
       mint.toBuffer(),
     ],
-    TOKEN_METADATA_PROGRAM_ID,
-  )
+    TOKEN_METADATA_PROGRAM,
+  )[0]
 }
 
-/**
- * Find Master Edition PDA (Metaplex)
- * Seeds: ["metadata", token_metadata_program_id, mint, "edition"]
- */
-export function findMasterEditionPda(mint: PublicKey): [PublicKey, number] {
-  return PublicKey.findProgramAddressSync(
+export const getMasterEdition = async (
+  mint: anchor.web3.PublicKey,
+): Promise<anchor.web3.PublicKey> => {
+  return anchor.web3.PublicKey.findProgramAddressSync(
     [
-      Buffer.from(SEEDS.METADATA),
-      TOKEN_METADATA_PROGRAM_ID.toBuffer(),
+      Buffer.from('metadata'),
+      TOKEN_METADATA_PROGRAM.toBuffer(),
       mint.toBuffer(),
-      Buffer.from(SEEDS.EDITION),
+      Buffer.from('edition'),
     ],
-    TOKEN_METADATA_PROGRAM_ID,
-  )
+    TOKEN_METADATA_PROGRAM,
+  )[0]
 }
 
 // =============================================================================
 // Validation
 // =============================================================================
-
-/**
- * Validate all required environment variables are set
- */
-export function validateEnvironment(): {
-  isValid: boolean
-  errors: string[]
-} {
-  const errors: string[] = []
-
-  if (!ADMIN_ADDRESS) {
-    errors.push('NEXT_PUBLIC_ADMIN_ADDRESS is not set')
-  }
-
-  if (isMainnet && !COLLECTION_MINT) {
-    errors.push('NEXT_PUBLIC_COLLECTION_MINT is not set for mainnet')
-  }
-
-  if (!process.env.NEXT_PUBLIC_ZK_ESCROW_PROGRAM_ID) {
-    errors.push('NEXT_PUBLIC_ZK_ESCROW_PROGRAM_ID is not set')
-  }
-
-  if (!process.env.NEXT_PUBLIC_SPL_NFT_PROGRAM_ID) {
-    errors.push('NEXT_PUBLIC_SPL_NFT_PROGRAM_ID is not set')
-  }
-
-  return {
-    isValid: errors.length === 0,
-    errors,
-  }
-}
 
 // Log environment info in development
 if (typeof window !== 'undefined' && DEBUG_MODE) {
@@ -258,7 +213,7 @@ if (typeof window !== 'undefined' && DEBUG_MODE) {
     rpcEndpoint: SOLANA_RPC_ENDPOINT,
     zkEscrowProgram: ZK_ESCROW_PROGRAM_ID.toBase58(),
     splNftProgram: SPL_NFT_PROGRAM_ID.toBase58(),
-    collectionMint: COLLECTION_MINT?.toBase58() || 'Not set',
+    tokenMetadataProgram: TOKEN_METADATA_PROGRAM.toBase58(),
     adminAddress: ADMIN_ADDRESS || 'Not set',
   })
 }
