@@ -48,3 +48,9 @@ export const getNFTsWithMetadata = async (publicKey: PublicKey) => {
 
   return nftsWithMetadata
 }
+
+export const abbreviateTransferMemo = (transferMemo: string) => {
+  // sol:3vFnCkXRFzcDDjbn9A7HVjgxtijbcSAzE3845vmV6jac
+  const [, address] = transferMemo.split(':')
+  return address ? `sol:${address.slice(0, 3)}...${address.slice(-3)}` : ''
+}
