@@ -132,7 +132,7 @@ export function Proof({
       console.error('Proof generation error:', error)
       setProofResult({
         success: false,
-        error: 'Proof 생성에 실패했습니다. 다시 시도해주세요.',
+        error: 'Failed to generate proof. Please try again.',
       })
     } finally {
       setIsLoading(false)
@@ -148,14 +148,17 @@ export function Proof({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Proof 생성</h2>
+        <h2 className="text-2xl font-bold">Generate Proof</h2>
       </div>
 
       {/* Instructions */}
-      <div className="space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-6">
-        <h3 className="font-semibold">증명서 정보 입력</h3>
-        <p className="text-sm text-gray-600">
-          송금확인증에 표시된 발급일자와 증명서번호를 정확히 입력하세요.
+      <div className="space-y-4 rounded-lg border border-border/50 bg-card/50 p-6 backdrop-blur">
+        <h3 className="font-semibold text-foreground">
+          Enter Proof Information
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          Enter the <b>Issuance Date</b> and <b>Certificate Number</b> displayed
+          on the transfer confirmation certificate exactly.
         </p>
       </div>
 
@@ -163,8 +166,10 @@ export function Proof({
       <form onSubmit={handleGenerateProof} className="space-y-4">
         {/* Issue Date */}
         <div className="space-y-2">
-          <label htmlFor="issueDate" className="text-sm font-medium">
-            발급일자
+          <label
+            htmlFor="issueDate"
+            className="text-sm font-medium text-foreground">
+            Issuance Date
           </label>
           <input
             id="issueDate"
@@ -180,21 +185,25 @@ export function Proof({
                 }))
               }
             }}
-            placeholder="YYYYMMDD (예: 20250124)"
+            placeholder="YYYYMMDD (e.g. 20250124)"
             maxLength={8}
-            className={`w-full rounded-lg border px-3 py-2 text-sm disabled:opacity-50 ${
-              validationErrors.issueDate ? 'border-red-500' : 'border-gray-300'
+            className={`w-full rounded-lg border bg-background px-3 py-2 text-sm text-foreground disabled:opacity-50 ${
+              validationErrors.issueDate ? 'border-destructive' : 'border-input'
             }`}
           />
           {validationErrors.issueDate && (
-            <p className="text-xs text-red-500">{validationErrors.issueDate}</p>
+            <p className="text-xs text-destructive">
+              {validationErrors.issueDate}
+            </p>
           )}
         </div>
 
         {/* Certificate Number */}
         <div className="space-y-2">
-          <label htmlFor="certificateNumber" className="text-sm font-medium">
-            증명서번호
+          <label
+            htmlFor="certificateNumber"
+            className="text-sm font-medium text-foreground">
+            Certificate Number
           </label>
           <input
             id="certificateNumber"
@@ -213,14 +222,14 @@ export function Proof({
             }}
             placeholder="XXXX-XXXX-XXXXXXXX"
             maxLength={18}
-            className={`w-full rounded-lg border px-3 py-2 text-sm disabled:opacity-50 ${
+            className={`w-full rounded-lg border bg-background px-3 py-2 text-sm text-foreground disabled:opacity-50 ${
               validationErrors.certificateNumber
-                ? 'border-red-500'
-                : 'border-gray-300'
+                ? 'border-destructive'
+                : 'border-input'
             }`}
           />
           {validationErrors.certificateNumber && (
-            <p className="text-xs text-red-500">
+            <p className="text-xs text-destructive">
               {validationErrors.certificateNumber}
             </p>
           )}
@@ -229,28 +238,26 @@ export function Proof({
         {/* Proof Result */}
         {proofResult && (
           <div
-            className={`rounded-lg border p-4 ${
+            className={`rounded-lg border p-4 backdrop-blur ${
               proofResult.success
-                ? 'border-green-200 bg-green-50'
-                : 'border-red-200 bg-red-50'
+                ? 'border-primary/30 bg-primary/10'
+                : 'border-destructive/30 bg-destructive/10'
             }`}>
             {proofResult.success ? (
               <div className="space-y-2">
-                <p className="font-semibold text-green-800">
-                  ✅ Proof 생성 완료
-                </p>
+                <p className="font-semibold text-primary">✅ Proof Generated</p>
                 {proofResult.data?.extractedParameters && (
-                  <div className="space-y-1 text-sm text-green-700">
+                  <div className="space-y-1 text-sm text-foreground">
                     <p>
-                      송금액:{' '}
+                      Transfer Amount:{' '}
                       {proofResult.data.extractedParameters.transactionAmount}
                     </p>
                     <p>
-                      송금일자:{' '}
+                      Transfer Date:{' '}
                       {proofResult.data.extractedParameters.transactionDate}
                     </p>
                     <p>
-                      수취인:{' '}
+                      Recipient Name:{' '}
                       {proofResult.data.extractedParameters.recipientName}
                     </p>
                   </div>
@@ -258,9 +265,11 @@ export function Proof({
               </div>
             ) : (
               <div className="space-y-2">
-                <p className="font-semibold text-red-800">❌ Proof 생성 실패</p>
-                <p className="text-sm text-red-700">
-                  {proofResult.error || '알 수 없는 오류가 발생했습니다.'}
+                <p className="font-semibold text-destructive">
+                  ❌ Failed to Generate Proof
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {proofResult.error || 'An unknown error occurred.'}
                 </p>
               </div>
             )}
@@ -273,15 +282,15 @@ export function Proof({
             <button
               type="button"
               onClick={handleNext}
-              className="w-full rounded-full bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700">
-              다음 단계
+              className="cursor-pointer w-full rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg">
+              Next
             </button>
           ) : (
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full rounded-full bg-blue-600 px-4 py-3 font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50">
-              {isLoading ? 'Proof 생성 중...' : 'Proof 생성'}
+              className="cursor-pointer w-full rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50">
+              {isLoading ? 'Generating Proof...' : 'Generate Proof'}
             </button>
           )}
         </div>

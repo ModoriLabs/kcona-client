@@ -55,13 +55,15 @@ export function ConfirmationModal({
       />
 
       {/* Modal Content */}
-      <aside className="relative z-10 mx-auto w-[90%] min-w-[320px] max-w-[400px] overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-2xl">
+      <aside className="relative z-10 mx-auto w-[90%] min-w-[320px] max-w-[400px] overflow-hidden rounded-3xl border border-border/50 bg-card shadow-2xl backdrop-blur">
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 p-5">
-          <h3 className="text-lg font-semibold">Transfer Confirmation</h3>
+        <div className="flex items-center justify-between border-b border-border/50 p-5">
+          <h3 className="text-lg font-semibold text-foreground">
+            Transfer Confirmation
+          </h3>
           <button
             onClick={onClose}
-            className="rounded-full p-1.5 transition-colors hover:bg-gray-100">
+            className="rounded-full p-1.5 transition-colors hover:bg-muted">
             <svg
               width="20"
               height="20"
@@ -79,14 +81,14 @@ export function ConfirmationModal({
 
         {/* Content */}
         <div className="p-5">
-          <p className="mb-4 text-sm text-gray-600">
+          <p className="mb-4 text-sm text-muted-foreground">
             Did your KRW transfer completed?
           </p>
 
           {/* Warning Box */}
-          <div className="relative mb-6 overflow-hidden rounded-2xl border border-red-200 bg-gradient-to-r from-red-50 via-orange-50 to-red-50 p-5 shadow-lg backdrop-blur-sm">
+          <div className="relative mb-6 overflow-hidden rounded-2xl border border-destructive/30 bg-destructive/10 p-5 shadow-lg backdrop-blur-sm">
             <div className="relative z-10">
-              <p className="flex items-center justify-center gap-2 text-center text-sm font-bold leading-relaxed text-red-600 drop-shadow-sm">
+              <p className="flex items-center justify-center gap-2 text-center text-sm font-bold leading-relaxed text-destructive drop-shadow-sm">
                 <span className="inline-block animate-pulse">⚠️</span>
                 Please modify the &apos;Transfer Memo&apos;.
               </p>
@@ -140,13 +142,13 @@ export function ConfirmationModal({
           <div className="mt-5 flex gap-3">
             <button
               onClick={onClose}
-              className="flex-1 rounded-full border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-semibold transition-all duration-200 hover:border-gray-400 hover:bg-gray-100">
-              Back
+              className="cursor-pointer flex-1 rounded-full border border-border bg-muted px-4 py-2 text-sm font-semibold text-foreground transition-all duration-200 hover:bg-muted/80">
+              Cancel
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 rounded-full bg-gradient-to-r from-pink-500 to-pink-600 px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:shadow-lg">
-              Transfer Complete
+              className="cursor-pointer flex-1 rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-2 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:opacity-90 hover:shadow-lg">
+              Confirm
             </button>
           </div>
         </div>

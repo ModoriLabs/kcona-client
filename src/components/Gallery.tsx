@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect } from 'react'
+import { RefreshCw } from 'lucide-react'
 import { useNfts } from 'src/hooks/useNfts'
 import { usePendingMint } from 'src/context/PendingMintContext'
 import NFTCard from './NFTCard'
@@ -52,7 +53,7 @@ export function Gallery() {
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="mb-4 text-4xl">🔄</div>
-          <p className="text-gray-600">NFT 목록을 불러오는 중...</p>
+          <p className="text-muted-foreground">Loading NFTs...</p>
         </div>
       </div>
     )
@@ -63,11 +64,11 @@ export function Gallery() {
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="mb-4 text-4xl">⚠️</div>
-          <p className="mb-4 text-red-600">{error}</p>
+          <p className="mb-4 text-destructive">{error}</p>
           <button
-            onClick={refetch}
-            className="rounded-full bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700">
-            다시 시도
+            onClick={() => refetch()}
+            className="cursor-pointer rounded-full bg-gradient-to-r from-primary to-secondary px-6 py-2 text-primary-foreground transition-all hover:opacity-90">
+            Retry
           </button>
         </div>
       </div>
@@ -79,9 +80,9 @@ export function Gallery() {
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
           <div className="mb-4 text-6xl">🖼️</div>
-          <h3 className="mb-2 text-xl font-semibold">NFT가 없습니다</h3>
-          <p className="text-gray-600">
-            KRW 송금 증명을 통해 첫 NFT를 민팅해보세요!
+          <h3 className="mb-2 text-xl font-semibold">No NFTs</h3>
+          <p className="text-muted-foreground">
+            Send KRW and generate the proof to mint your first NFT!
           </p>
         </div>
       </div>
@@ -89,6 +90,22 @@ export function Gallery() {
   }
   return (
     <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="mb-2 text-3xl font-bold">My NFTs</h2>
+          <p className="text-muted-foreground">
+            Total {nftsWithoutCollection.length + (pendingMintAddress ? 1 : 0)}
+            NFTs
+          </p>
+        </div>
+        <button
+          onClick={() => refetch({ background: false })}
+          className="flex items-center gap-2 rounded-lg border border-border/50 bg-card/50 px-4 py-2 text-sm font-medium transition-all hover:bg-card backdrop-blur-sm">
+          <RefreshCw className="h-4 w-4" />
+          Refresh
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {/* Pending NFT with loading card */}
         {pendingMintAddress && (
@@ -104,16 +121,6 @@ export function Gallery() {
             <NFTCard key={nft.mint} nft={nft} />
           ))}
       </div>
-
-      {(nftsWithoutCollection.length > 0 || pendingMintAddress) && (
-        <div className="text-center text-sm text-gray-500">
-          총 {nftsWithoutCollection.length + (pendingMintAddress ? 1 : 0)}개의
-          NFT
-          {pendingMintAddress && (
-            <span className="ml-2 text-blue-600">(1개 민팅 중)</span>
-          )}
-        </div>
-      )}
     </div>
   )
 }
@@ -124,36 +131,34 @@ interface PendingNFTCardProps {
 
 function PendingNFTCard({ mintAddress }: PendingNFTCardProps) {
   return (
-    <div className="overflow-hidden rounded-lg border border-blue-200 bg-white shadow-sm">
+    <div className="group overflow-hidden rounded-lg border border-primary/20 bg-card/50 shadow-sm backdrop-blur transition-all hover:border-primary/50">
       {/* Loading Image Area */}
       <div
-        className="relative w-full animate-pulse bg-gradient-to-br from-blue-100 to-purple-100"
+        className="relative w-full animate-pulse bg-gradient-to-br from-primary/20 to-secondary/20"
         style={{ aspectRatio: '7/11' }}>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
-            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
-            <p className="mt-4 text-sm font-medium text-gray-600">
-              NFT 민팅 중...
+            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-primary/30 border-t-primary"></div>
+            <p className="mt-4 text-sm font-medium text-muted-foreground">
+              Minting Your Star...
             </p>
           </div>
         </div>
       </div>
 
       {/* Loading Info */}
-      <div className="p-4">
-        <div className="mb-2 h-6 w-3/4 animate-pulse rounded bg-gray-200"></div>
-        <div className="mb-3 h-4 w-1/2 animate-pulse rounded bg-gray-100"></div>
+      <div className="p-4 space-y-2">
+        <div className="mb-2 h-6 w-3/4 animate-pulse rounded bg-muted/50"></div>
+        <div className="mb-3 h-4 w-1/2 animate-pulse rounded bg-muted/30"></div>
 
         {/* Mint Address */}
-        <div className="mb-3 rounded bg-gray-50 p-2">
-          <p className="text-xs text-gray-500">Mint Address</p>
-          <p className="break-all font-mono text-xs text-gray-700">
-            {mintAddress}
-          </p>
+        <div className="mb-3 rounded bg-muted/30 p-2">
+          <p className="text-xs text-muted-foreground">Mint Address</p>
+          <p className="break-all font-mono text-xs">{mintAddress}</p>
         </div>
 
         {/* Loading Button */}
-        <div className="h-10 w-full animate-pulse rounded-full bg-gray-200"></div>
+        <div className="h-10 w-full animate-pulse rounded-full bg-muted/50"></div>
       </div>
     </div>
   )

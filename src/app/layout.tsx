@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Kcona Client - Solana NFT Minting',
-  description: 'KRW payment proof verification and NFT minting on Solana',
+  title: 'Kcona',
+  description: 'purchase your K-POP star',
 }
 
 export default function RootLayout({

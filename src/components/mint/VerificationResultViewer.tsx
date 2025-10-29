@@ -107,14 +107,14 @@ export function VerificationResultViewer({
       <button
         onClick={handleFetchResult}
         disabled={isLoading || !connected || !isReady || disabled}
-        className="h-10 w-full rounded-lg border-2 border-indigo-600 bg-white text-sm font-medium text-indigo-600 transition-all hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50">
+        className="cursor-pointer h-10 w-full rounded-lg border-2 border-indigo-600 bg-white text-sm font-medium text-indigo-600 transition-all hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50">
         {isLoading ? (
           <div className="flex items-center justify-center">
             <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-indigo-600/30 border-t-indigo-600"></div>
             <span>Loading...</span>
           </div>
         ) : (
-          'Step 2: Check Verification Result'
+          'Check Verification Result'
         )}
       </button>
 

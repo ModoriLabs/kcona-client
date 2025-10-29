@@ -1,32 +1,33 @@
 'use client'
 
+import Image from 'next/image'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
-import { SOLANA_CLUSTER, isLocalnet, isDevnet, isMainnet } from 'src/constants'
+import { Wallet, CheckCircle2 } from 'lucide-react'
 
 export function Connect() {
   const { connected, publicKey } = useWallet()
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center gap-8 p-8">
-      <div className="flex flex-col items-center gap-4 text-center">
-        <h1 className="text-4xl font-bold">Kcona Client</h1>
-        <p className="text-lg text-gray-600">
-          KRW Payment Proof → Solana NFT Minting
-        </p>
-
-        {/* Network indicator */}
-        <div className="rounded-lg bg-gray-100 px-4 py-2">
-          <p className="text-sm">
-            Network:{' '}
-            <span className="font-semibold">
-              {SOLANA_CLUSTER.toUpperCase()}
-            </span>
-            {isLocalnet && ' (Local Validator)'}
-            {isDevnet && ' (Testnet)'}
-            {isMainnet && ' (Production)'}
-          </p>
+    <div className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background p-8">
+      <div className="flex flex-col items-center gap-6 text-center">
+        {/* Logo/Icon */}
+        <div className="flex h-20 w-20 items-center justify-center rounded-2xl shadow-lg">
+          <Image
+            src="/logo.png"
+            alt="Kcona"
+            width={80}
+            height={80}
+            className="rounded-full object-contain"
+          />
         </div>
+
+        <h1 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-5xl font-bold text-transparent">
+          Kcona
+        </h1>
+        <p className="text-lg text-muted-foreground">
+          purchase your K-POP star with KRW payment
+        </p>
       </div>
 
       {/* Wallet Connection */}
@@ -34,27 +35,34 @@ export function Connect() {
         <WalletMultiButton />
 
         {connected && publicKey && (
-          <div className="rounded-lg bg-green-50 px-6 py-4 text-center">
-            <p className="text-sm text-green-600">✅ Wallet Connected</p>
-            <p className="mt-2 font-mono text-xs text-gray-600">
-              {publicKey.toBase58()}
-            </p>
+          <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-card/50 px-6 py-4 backdrop-blur-sm">
+            <CheckCircle2 className="h-5 w-5 text-primary" />
+            <div>
+              <p className="text-sm text-primary">Wallet Connected</p>
+              <p className="mt-1 font-mono text-xs text-muted-foreground">
+                {publicKey.toBase58().slice(0, 4)}...
+                {publicKey.toBase58().slice(-4)}
+              </p>
+            </div>
           </div>
         )}
       </div>
 
       {/* Instructions */}
       {!connected && (
-        <div className="max-w-md space-y-4 rounded-lg border border-gray-200 p-6">
-          <h3 className="font-semibold">Getting Started</h3>
-          <ol className="list-decimal space-y-2 pl-5 text-sm text-gray-600">
+        <div className="max-w-md space-y-4 rounded-lg border border-primary/20 bg-card/50 p-6 backdrop-blur-sm">
+          <div className="flex items-center gap-2">
+            <Wallet className="h-5 w-5 text-primary" />
+            <h3 className="font-semibold">Getting Started</h3>
+          </div>
+          <ol className="list-decimal space-y-2 pl-5 text-sm text-muted-foreground">
             <li>
               Install a Solana wallet (
               <a
                 href="https://phantom.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline">
+                className="text-primary hover:underline">
                 Phantom
               </a>{' '}
               or{' '}
@@ -62,17 +70,12 @@ export function Connect() {
                 href="https://solflare.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline">
+                className="text-primary hover:underline">
                 Solflare
               </a>
               )
             </li>
             <li>Click &ldquo;Select Wallet&rdquo; to connect</li>
-            {isLocalnet && (
-              <li className="text-yellow-600">
-                Make sure your local Solana validator is running
-              </li>
-            )}
           </ol>
         </div>
       )}

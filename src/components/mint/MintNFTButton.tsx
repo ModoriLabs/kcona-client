@@ -143,7 +143,7 @@ export function MintNFTButton({
     <button
       onClick={handleMint}
       disabled={isLoading || !connected || !isReady || disabled}
-      className="h-11 w-full rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-base font-medium text-white transition-all hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-50">
+      className="cursor-pointer h-11 w-full rounded-lg bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-md hover:from-primary/80 hover:to-secondary/80 disabled:cursor-not-allowed disabled:opacity-50">
       {isLoading ? (
         <div className="flex items-center justify-center">
           <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-blue-200/50 border-t-blue-200"></div>

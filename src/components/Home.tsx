@@ -1,8 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
+import { CheckCircle2, Send, ShieldCheck, Sparkles, Wallet } from 'lucide-react'
 import { Connect } from './step/Connect'
 import { Transfer } from './step/Transfer'
 import { Proof, ProofResult } from './step/Proof'
@@ -56,90 +58,139 @@ export function Home() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center p-8">
-      <div className="w-full max-w-4xl">
-        {/* Wallet Info Header */}
-        <div className="mb-6 flex items-center justify-between rounded-lg border border-gray-200 bg-white px-6 py-4 shadow-sm">
-          <div className="flex items-center gap-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-              <span className="text-lg">👛</span>
-            </div>
-            <div>
-              <p className="text-xs text-gray-500">Connected Wallet</p>
-              {publicKey && (
-                <p className="font-mono text-sm font-medium text-gray-800">
-                  {publicKey.toBase58().slice(0, 4)}...
-                  {publicKey.toBase58().slice(-4)}
-                </p>
-              )}
-            </div>
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-sm">
+        <button
+          onClick={() => window.location.reload()}
+          className="container mx-auto flex items-center justify-between px-4 py-4 cursor-pointer">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/logo.png"
+              alt="Kcona Logo"
+              width={40}
+              height={40}
+              className="rounded-lg"
+            />
+            <h1 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-bold text-transparent">
+              Kcona
+            </h1>
           </div>
           <WalletMultiButton />
-        </div>
+        </button>
+      </header>
 
-        {/* View Toggle */}
-        <div className="mb-6 flex items-center justify-center gap-4">
+      {/* Main Content */}
+      <main className="container mx-auto px-4 py-8">
+        {/* View Toggle Tabs */}
+        <div className="mx-auto mb-8 grid w-full max-w-md grid-cols-2 gap-2 rounded-lg bg-muted/50 p-1">
           <button
             onClick={() => setCurrentView(View.WORKFLOW)}
-            className={`rounded-full px-6 py-2 font-medium transition-all ${
+            className={`rounded-md px-6 py-2 font-medium transition-all ${
               currentView === View.WORKFLOW
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-md'
+                : 'cursor-pointer text-muted-foreground hover:text-foreground'
             }`}>
-            NFT 민팅
+            Purchase
           </button>
           <button
             onClick={() => setCurrentView(View.GALLERY)}
-            className={`rounded-full px-6 py-2 font-medium transition-all ${
+            className={`rounded-md px-6 py-2 font-medium transition-all ${
               currentView === View.GALLERY
-                ? 'bg-blue-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-md'
+                : 'cursor-pointer text-muted-foreground hover:text-foreground'
             }`}>
-            내 NFT
+            My NFTs
           </button>
         </div>
 
         {currentView === View.GALLERY ? (
-          <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
-            <Gallery />
-          </div>
+          <Gallery />
         ) : (
-          <div className="w-full max-w-2xl mx-auto">
-            {/* Step Indicator */}
-            <div className="mb-8 flex items-center justify-center gap-2">
-              <StepIndicator
-                step={1}
-                label="연결"
-                active={false}
-                completed={true}
-              />
-              <div className="h-0.5 w-12 bg-gray-300" />
-              <StepIndicator
-                step={2}
-                label="송금"
-                active={currentStep === Step.TRANSFER}
-                completed={
-                  currentStep === Step.PROOF || currentStep === Step.MINT
+          <div className="mx-auto w-full max-w-2xl space-y-8">
+            {/* Progress Steps */}
+            <div className="mx-auto flex max-w-2xl items-center justify-between">
+              {[
+                { id: Step.CONNECT, label: 'Connect', icon: Wallet, step: 1 },
+                { id: Step.TRANSFER, label: 'Transfer', icon: Send, step: 2 },
+                { id: Step.PROOF, label: 'Proof', icon: ShieldCheck, step: 3 },
+                { id: Step.MINT, label: 'Mint', icon: Sparkles, step: 4 },
+              ].map((stepInfo, index, arr) => {
+                const Icon = stepInfo.icon
+                const isActive = stepInfo.id === currentStep
+                const isCompleted =
+                  stepInfo.step === 1 ||
+                  (stepInfo.step === 2 &&
+                    (currentStep === Step.PROOF ||
+                      currentStep === Step.MINT)) ||
+                  (stepInfo.step === 3 && currentStep === Step.MINT)
+
+                // Determine if step is clickable
+                const isClickable =
+                  stepInfo.id !== Step.CONNECT && (isCompleted || isActive)
+
+                const handleStepClick = () => {
+                  if (!isClickable) return
+
+                  // Navigate to the clicked step
+                  if (stepInfo.id === Step.TRANSFER) {
+                    setCurrentStep(Step.TRANSFER)
+                  } else if (
+                    stepInfo.id === Step.PROOF &&
+                    (currentStep === Step.PROOF || currentStep === Step.MINT)
+                  ) {
+                    setCurrentStep(Step.PROOF)
+                  } else if (
+                    stepInfo.id === Step.MINT &&
+                    currentStep === Step.MINT &&
+                    proofResult
+                  ) {
+                    setCurrentStep(Step.MINT)
+                  }
                 }
-              />
-              <div className="h-0.5 w-12 bg-gray-300" />
-              <StepIndicator
-                step={3}
-                label="증명"
-                active={currentStep === Step.PROOF}
-                completed={currentStep === Step.MINT}
-              />
-              <div className="h-0.5 w-12 bg-gray-300" />
-              <StepIndicator
-                step={4}
-                label="민팅"
-                active={currentStep === Step.MINT}
-                completed={false}
-              />
+
+                return (
+                  <div key={stepInfo.id} className="flex flex-1 items-center">
+                    <div className="flex flex-1 flex-col items-center">
+                      <button
+                        onClick={handleStepClick}
+                        disabled={!isClickable}
+                        className={`flex h-12 w-12 items-center justify-center rounded-full transition-all ${
+                          isCompleted
+                            ? 'bg-primary text-primary-foreground'
+                            : isActive
+                              ? 'bg-gradient-to-br from-primary to-secondary text-primary-foreground'
+                              : 'bg-muted text-muted-foreground'
+                        } ${isClickable ? 'cursor-pointer hover:scale-110 hover:shadow-lg' : 'cursor-default'}`}>
+                        {isCompleted ? (
+                          <CheckCircle2 className="h-6 w-6" />
+                        ) : (
+                          <Icon className="h-6 w-6" />
+                        )}
+                      </button>
+                      <span
+                        className={`mt-2 text-sm font-medium ${
+                          isActive || isCompleted
+                            ? 'text-foreground'
+                            : 'text-muted-foreground'
+                        }`}>
+                        {stepInfo.label}
+                      </span>
+                    </div>
+                    {index < arr.length - 1 && (
+                      <div
+                        className={`mx-2 h-0.5 flex-1 transition-all ${
+                          isCompleted ? 'bg-primary' : 'bg-muted'
+                        }`}
+                      />
+                    )}
+                  </div>
+                )
+              })}
             </div>
 
             {/* Main Card */}
-            <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
+            <div className="rounded-2xl border border-primary/20 bg-card/50 p-8 shadow-lg backdrop-blur">
               {currentStep === Step.TRANSFER && (
                 <Transfer onNext={handleTransferComplete} />
               )}
@@ -158,44 +209,14 @@ export function Home() {
             </div>
           </div>
         )}
-      </div>
-    </div>
-  )
-}
+      </main>
 
-function StepIndicator({
-  step,
-  label,
-  active,
-  completed,
-}: {
-  step: number
-  label: string
-  active: boolean
-  completed: boolean
-}) {
-  return (
-    <div className="flex flex-col items-center gap-2">
-      <div
-        className={`flex h-10 w-10 items-center justify-center rounded-full border-2 font-semibold ${
-          completed
-            ? 'border-green-600 bg-green-600 text-white'
-            : active
-              ? 'border-blue-600 bg-blue-600 text-white'
-              : 'border-gray-300 bg-white text-gray-400'
-        }`}>
-        {completed ? '✓' : step}
-      </div>
-      <span
-        className={`text-xs font-medium ${
-          active
-            ? 'text-blue-600'
-            : completed
-              ? 'text-green-600'
-              : 'text-gray-400'
-        }`}>
-        {label}
-      </span>
+      {/* Footer */}
+      <footer className="mt-16 border-t border-border/50">
+        <div className="container mx-auto px-4 py-6 text-center text-sm text-muted-foreground">
+          <p>Kcona - purchase your K-POP star</p>
+        </div>
+      </footer>
     </div>
   )
 }

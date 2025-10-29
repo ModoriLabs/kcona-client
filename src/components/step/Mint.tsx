@@ -8,7 +8,6 @@ import {
   VerificationResultViewer,
   VerificationResult,
 } from '../mint/VerificationResultViewer'
-import { CollectionStateViewer } from '../mint/CollectionStateViewer'
 
 export function Mint({
   proofResult,
@@ -60,20 +59,19 @@ export function Mint({
     return (
       <div className="flex flex-col gap-6">
         <div className="text-center">
-          <div className="mb-4 text-6xl">🎉</div>
-          <h2 className="mb-2 text-2xl font-bold text-green-800">
-            NFT 민팅 성공!
+          <h2 className="mb-2 text-2xl font-bold text-primary">
+            NFT Minting Success!
           </h2>
-          <p className="text-gray-600">
-            축하합니다! NFT가 성공적으로 민팅되었습니다.
+          <p className="text-muted-foreground">
+            Congratulations! The NFT has been successfully minted.
           </p>
         </div>
 
-        <div className="rounded-lg border border-green-200 bg-green-50 p-4">
-          <p className="mb-2 text-sm font-semibold text-green-800">
+        <div className="rounded-lg border border-primary/30 bg-primary/10 p-4 backdrop-blur">
+          <p className="mb-2 text-sm font-semibold text-primary">
             NFT Mint Address:
           </p>
-          <p className="break-all font-mono text-xs text-green-700">
+          <p className="break-all font-mono text-xs text-foreground">
             {mintAddress}
           </p>
         </div>
@@ -82,8 +80,8 @@ export function Mint({
           href={`https://explorer.solana.com/address/${mintAddress}?cluster=custom&customUrl=http://localhost:8899`}
           target="_blank"
           rel="noopener noreferrer"
-          className="w-full rounded-full bg-blue-600 px-4 py-3 text-center font-semibold text-white transition-colors hover:bg-blue-700">
-          Explorer에서 보기 (Localnet)
+          className="w-full rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 text-center font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg">
+          View in Explorer (Localnet)
         </a>
       </div>
     )
@@ -93,32 +91,37 @@ export function Mint({
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">NFT 민팅</h2>
+        <h2 className="text-2xl font-bold">NFT Minting</h2>
       </div>
 
       {/* Instructions */}
-      <div className="space-y-4 rounded-lg border border-gray-200 bg-gray-50 p-6">
-        <h3 className="font-semibold">Two-Transaction Pattern</h3>
-        <p className="text-sm text-gray-600">
-          ZK Proof 검증과 NFT 민팅을 두 단계로 나누어 진행합니다.
+      <div className="space-y-4 rounded-lg border border-border/50 bg-card/50 p-6 backdrop-blur">
+        <h3 className="font-semibold text-foreground">
+          Two-Transaction Pattern
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          First, verify the proof, and then mint the NFT using the verified
+          proof result.
         </p>
-        <div className="space-y-2 text-sm text-gray-600">
+        <div className="space-y-2 text-sm text-muted-foreground">
           <div className="flex items-start gap-2">
             <span
               className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold ${
                 verificationSignature
-                  ? 'bg-green-600 text-white'
-                  : 'bg-gray-300 text-gray-600'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-muted text-muted-foreground'
               }`}>
               1
             </span>
             <div>
-              <p className="font-medium">Proof 검증 (verifyProof)</p>
-              <p className="text-xs text-gray-500">
-                ZK Proof를 온체인에서 검증하고 결과를 PDA에 저장합니다
+              <p className="font-medium text-foreground">
+                Verify Proof (verifyProof)
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Verify the ZK Proof and store the result in a PDA.
               </p>
               {verificationSignature && (
-                <p className="mt-1 font-mono text-xs text-green-600">
+                <p className="mt-1 font-mono text-xs text-primary">
                   ✓ Verified
                 </p>
               )}
@@ -128,21 +131,23 @@ export function Mint({
             <span
               className={`mt-0.5 flex h-5 w-5 items-center justify-center rounded-full text-xs font-semibold ${
                 mintSignature
-                  ? 'bg-green-600 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : verificationSignature
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-300 text-gray-600'
+                    ? 'bg-secondary text-secondary-foreground'
+                    : 'bg-muted text-muted-foreground'
               }`}>
               2
             </span>
             <div>
-              <p className="font-medium">NFT 민팅 (mintWithVerifiedProof)</p>
-              <p className="text-xs text-gray-500">
-                검증된 Proof를 사용하여 NFT를 민팅합니다
+              <p className="font-medium text-foreground">
+                Mint NFT (mintWithVerifiedProof)
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Mint the NFT using the verified proof result.
               </p>
               {!verificationSignature && (
-                <p className="mt-1 text-xs text-gray-500">
-                  Step 1을 먼저 완료해주세요
+                <p className="mt-1 text-xs text-muted-foreground">
+                  Please complete Step 1 first.
                 </p>
               )}
             </div>
@@ -157,8 +162,8 @@ export function Mint({
           onSuccess={handleVerificationSuccess}
         />
         {verificationSignature && (
-          <div className="rounded-lg border border-green-200 bg-green-50 p-3">
-            <p className="text-xs text-green-700">
+          <div className="rounded-lg border border-primary/30 bg-primary/10 p-3 backdrop-blur">
+            <p className="text-xs text-primary">
               ✓ Proof verified successfully
             </p>
           </div>
@@ -169,7 +174,7 @@ export function Mint({
 
       {/* Verification Result Viewer */}
       <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-gray-700">
+        <h3 className="text-sm font-semibold text-foreground">
           📋 Verification Result
         </h3>
         <VerificationResultViewer
@@ -177,13 +182,13 @@ export function Mint({
           disabled={!verificationSignature}
         />
         {!verificationSignature && (
-          <p className="text-center text-xs text-gray-500">
-            Step 1을 먼저 완료해주세요
+          <p className="text-center text-xs text-muted-foreground">
+            Please complete Step 1 first.
           </p>
         )}
         {verificationResult?.isUsed && (
-          <p className="text-center text-xs text-red-600">
-            ⚠️ 이미 사용된 proof입니다
+          <p className="text-center text-xs text-destructive">
+            ⚠️ The proof has already been used.
           </p>
         )}
       </div>
@@ -192,14 +197,14 @@ export function Mint({
       <div className="space-y-3">
         <MintNFTButton onSuccess={handleMintSuccess} disabled={!canMint} />
         {!canMint && (
-          <p className="text-center text-xs text-gray-500">
+          <p className="text-center text-xs text-muted-foreground">
             {!verificationSignature
-              ? 'Step 1을 먼저 완료해주세요'
+              ? 'Please complete Step 1 first.'
               : !verificationResult
-                ? 'Verification Result를 확인해주세요'
+                ? 'Please check the Verification Result.'
                 : verificationResult.isUsed
-                  ? '이미 사용된 proof입니다'
-                  : 'Verification Result를 확인해주세요'}
+                  ? 'The proof has already been used.'
+                  : 'Please check the Verification Result.'}
           </p>
         )}
       </div>

@@ -33,11 +33,11 @@ export function Transfer({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">KRW 송금</h2>
+        <h2 className="text-2xl font-bold">Send KRW</h2>
       </div>
 
       {/* Video Tutorial Section */}
-      <section className="space-y-4 rounded-[24px] border border-gray-200 bg-gray-50/50 p-6 backdrop-blur-xl">
+      <section className="space-y-4 rounded-[24px] border border-border/50 bg-card/50 p-6 backdrop-blur-xl">
         {/* Mobile: Button to open video popup */}
         <button
           onClick={() => setIsVideoPopupOpen(true)}
@@ -53,14 +53,14 @@ export function Transfer({ onNext }: { onNext: () => void }) {
             strokeLinejoin="round">
             <polygon points="5,3 19,12 5,21" />
           </svg>
-          토스 송금 데모 영상 보기
+          View Demo Video
         </button>
 
         {/* Desktop: Inline video */}
-        <div className="hidden overflow-hidden rounded-2xl border border-gray-200 bg-gray-100 sm:flex sm:items-center sm:justify-center">
+        <div className="hidden overflow-hidden rounded-2xl border border-border/50 bg-background sm:flex sm:items-center sm:justify-center">
           <video controls className="h-[640px] w-full rounded-lg">
             <source src="/tossbank_transfer.mp4" type="video/mp4" />
-            브라우저가 비디오를 지원하지 않습니다.
+            Your browser does not support the video tag.
           </video>
         </div>
       </section>
@@ -70,28 +70,28 @@ export function Transfer({ onNext }: { onNext: () => void }) {
         isOpen={isVideoPopupOpen}
         onClose={() => setIsVideoPopupOpen(false)}
         videoSrc="/tossbank_transfer.mp4"
-        title="토스뱅크 송금 데모"
+        title="Tossbank Transfer Demo"
       />
 
       {/* Transfer Instructions */}
-      <section className="space-y-4 rounded-[24px] border border-gray-200 bg-white p-6 backdrop-blur-xl">
+      <section className="space-y-4 rounded-[24px] border border-border/50 bg-card/50 p-6 backdrop-blur-xl">
         <div className="space-y-2">
-          <h3 className="flex items-center gap-2 text-lg font-semibold">
-            <span className="text-blue-600">◆</span>
-            Send money via Bank app
+          <h3 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+            <span className="text-primary">◆</span>
+            Send Money via Bank App
           </h3>
-          <div className="ml-6 space-y-2 text-sm text-gray-600">
-            <p>1. Send KRW WON to the recipient via TOSS</p>
-            <p className="font-bold text-red-600">
+          <div className="ml-6 space-y-2 text-sm text-muted-foreground">
+            <p>1. Send KRW to the recipient via TOSS</p>
+            <p className="font-bold text-destructive">
               ⚠️ Please modify the &apos;Transfer Memo&apos;.
             </p>
-            <p>2. You must use Toss (In this version) as the sending bank.</p>
+            <p>2. You must use Toss as the sending bank.</p>
           </div>
         </div>
 
         {/* QR Code for Desktop */}
         <div className="hidden justify-center pt-4 pb-4 sm:flex">
-          <div className="rounded-2xl border border-gray-200 bg-white p-4">
+          <div className="rounded-2xl border border-border/50 bg-background p-4">
             <QRCode value={qrCodeUrl} size={200} level="H" />
           </div>
         </div>
@@ -100,7 +100,7 @@ export function Transfer({ onNext }: { onNext: () => void }) {
         <button
           onClick={launch}
           className="flex w-full items-center justify-center gap-2 rounded-full bg-blue-600 px-4 py-2 font-semibold text-white transition-all duration-200 hover:bg-blue-700 hover:shadow-lg sm:hidden">
-          토스뱅크 앱으로 송금하기
+          Send Money via Tossbank App
           <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
             <path
               d="M7 3H5.5C4.11929 3 3 4.11929 3 5.5V12.5C3 13.8807 4.11929 15 5.5 15H12.5C13.8807 15 15 13.8807 15 12.5V11"
@@ -134,7 +134,7 @@ export function Transfer({ onNext }: { onNext: () => void }) {
               reset()
             }}
             className="mt-2 flex w-full items-center justify-center gap-2 rounded-full border border-gray-300 bg-gray-50 px-4 py-2 text-sm font-medium transition-all duration-200 hover:bg-gray-100 sm:hidden">
-            토스뱅크 앱 설치하기
+            Install Tossbank App
             <svg width="16" height="16" viewBox="0 0 18 18" fill="none">
               <path
                 d="M7 3H5.5C4.11929 3 3 4.11929 3 5.5V12.5C3 13.8807 4.11929 15 5.5 15H12.5C13.8807 15 15 13.8807 15 12.5V11"
@@ -162,25 +162,27 @@ export function Transfer({ onNext }: { onNext: () => void }) {
         )}
 
         {/* Account Details */}
-        <section className="space-y-3 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+        <section className="space-y-3 rounded-2xl border border-border/50 bg-muted/30 p-4">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-600">Recipient Name</p>
-            <p className="text-sm font-medium">이현민(모임통장)</p>
+            <p className="text-sm text-muted-foreground">Recipient Name</p>
+            <p className="text-sm font-medium text-foreground">
+              이현민(모임통장)
+            </p>
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-600">Bank Account</p>
+            <p className="text-sm text-muted-foreground">Bank Account</p>
             <CopyTextButton
               text={TOSS_ACCOUNT_NUMBER}
               title={`토스뱅크 ${TOSS_ACCOUNT_NUMBER}`}
             />
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-600">Transfer Memo</p>
+            <p className="text-sm text-muted-foreground">Transfer Memo</p>
             <CopyTextButton text={transferMemo} title={transferMemo} />
           </div>
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-600">Transfer Amount</p>
-            <p className="text-sm font-medium">
+            <p className="text-sm text-muted-foreground">Transfer Amount</p>
+            <p className="text-sm font-medium text-foreground">
               {transferAmount.toLocaleString()} KRW
             </p>
           </div>
@@ -190,7 +192,7 @@ export function Transfer({ onNext }: { onNext: () => void }) {
       {/* Actions */}
       <button
         onClick={handleConfirmTransfer}
-        className="w-full rounded-full bg-gradient-to-r from-pink-500 to-pink-600 px-4 py-3 font-semibold text-white transition-all duration-200 hover:shadow-lg">
+        className="w-full rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 font-semibold text-primary-foreground transition-all duration-200 hover:shadow-lg hover:opacity-90 cursor-pointer">
         Next
       </button>
 

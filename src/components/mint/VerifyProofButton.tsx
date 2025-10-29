@@ -29,6 +29,7 @@ export function VerifyProofButton({
   const [transactionSignature, setTransactionSignature] = useState<
     string | null
   >(null)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   useTransactionToast({ transactionSignature })
 
@@ -103,6 +104,7 @@ export function VerifyProofButton({
       if (onSuccess) {
         onSuccess(txSignature)
       }
+      setIsSuccess(true)
     } catch (err) {
       console.error('Error verifying proof:', err)
       toast.error('Proof Verification Failed', {
@@ -113,12 +115,13 @@ export function VerifyProofButton({
       setIsLoading(false)
     }
   }
+  console.log('isSuccess', isSuccess)
 
   return (
     <button
       onClick={handleVerifyProof}
-      disabled={isLoading || !connected || !isReady}
-      className="h-11 w-full rounded-lg bg-gradient-to-r from-green-600 to-emerald-600 text-base font-medium text-white transition-all hover:from-green-700 hover:to-emerald-700 disabled:cursor-not-allowed disabled:opacity-50">
+      disabled={isLoading || !connected || !isReady || isSuccess}
+      className="cursor-pointer h-11 w-full rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-base font-medium text-white transition-all hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-50">
       {isLoading ? (
         <div className="flex items-center justify-center">
           <div className="mr-2 h-5 w-5 animate-spin rounded-full border-2 border-green-200/50 border-t-green-200"></div>
