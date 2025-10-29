@@ -10,6 +10,10 @@ import nullifierRegistryIdl from 'src/lib/idl/nullifier_registry.json'
 
 export type SolanaCluster = 'mainnet-beta' | 'devnet' | 'testnet' | 'localnet'
 
+export const DEPLOYER_ADDRESS = new PublicKey(
+  process.env.NEXT_PUBLIC_DEPLOYER_ADDRESS || '',
+)
+
 export const SOLANA_CLUSTER =
   (process.env.NEXT_PUBLIC_SOLANA_CLUSTER as SolanaCluster) || 'localnet'
 
@@ -133,11 +137,9 @@ export const SKIP_PREFLIGHT = process.env.NEXT_PUBLIC_SKIP_PREFLIGHT === 'true'
  * Seeds: ["payment_config", authority]
  */
 
-export const getPaymentConfig = async (
-  authority: PublicKey,
-): Promise<anchor.web3.PublicKey> => {
+export const getPaymentConfig = async (): Promise<anchor.web3.PublicKey> => {
   return anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.PAYMENT_CONFIG), authority.toBuffer()],
+    [Buffer.from(SEEDS.PAYMENT_CONFIG), DEPLOYER_ADDRESS.toBuffer()],
     ZK_ESCROW_PROGRAM_ID,
   )[0]
 }

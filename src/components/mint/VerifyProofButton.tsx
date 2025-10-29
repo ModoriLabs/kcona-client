@@ -7,7 +7,7 @@ import { useZkEscrowProgram } from 'src/hooks/useZkEscrowProgram'
 import { useTransactionToast } from 'src/hooks/useTransactionToast'
 import { ProofResult } from '../step/Proof'
 import { convertProofToAnchor } from 'src/lib/proofUtils'
-import { getVerificationResult } from 'src/constants'
+import { getVerificationResult, getPaymentConfig } from 'src/constants'
 import { ADMIN_ADDRESS } from 'src/constants'
 
 interface VerifyProofButtonProps {
@@ -43,34 +43,62 @@ export function VerifyProofButton({
       return
     }
 
+    if (!proofResult.data?.receipt?.claim?.identifier) {
+      toast.error('Claim identifier is missing', {
+        duration: 5000,
+      })
+      return
+    }
+
     try {
       setIsLoading(true)
       setTransactionSignature(null)
 
+      console.log('=== Debug: Verify Proof Setup ===')
+      console.log('Network:', program.provider.connection.rpcEndpoint)
+      console.log('Wallet:', publicKey.toBase58())
+      console.log('ZK Program ID:', program.programId.toBase58())
+
+      // Check payment config exists
+      const paymentConfigPda = await getPaymentConfig()
+      console.log('Payment Config PDA:', paymentConfigPda.toBase58())
+
+      const paymentConfigAccount =
+        await program.account.paymentConfig.fetchNullable(paymentConfigPda)
+      console.log('Payment Config exists:', !!paymentConfigAccount)
+
+      if (!paymentConfigAccount) {
+        console.error('❌ Payment config not initialized for this wallet!')
+        toast.error('Initialization Required', {
+          description: `Please run initialization script with wallet: ${publicKey.toBase58()}`,
+          duration: 8000,
+        })
+        return
+      }
+
       // Convert proof to Anchor format
       const anchorProof = convertProofToAnchor(proofResult)
-      console.log('Converting proof to Anchor format...')
       console.log(
-        'Signatures length:',
+        'Proof converted, signatures:',
         anchorProof.signedClaim.signatures.length,
       )
 
       // Get verification result PDA
       const verificationResultPda = await getVerificationResult(publicKey)
-      console.log('=== PDA Calculation Debug ===')
-      console.log('Program ID:', program.programId.toBase58())
-      console.log('User PublicKey:', publicKey.toBase58())
-      console.log('Calculated PDA:', verificationResultPda.toBase58())
+      console.log('Verification Result PDA:', verificationResultPda.toBase58())
 
       // Call verifyProof instruction
+      console.log('Calling verifyProof...')
       const txSignature = await program.methods
         .verifyProof(anchorProof, [ADMIN_ADDRESS], 1)
         .accounts({
           signer: publicKey,
         })
-        .rpc()
+        .rpc({
+          skipPreflight: true,
+        })
 
-      console.log('Proof verified:', txSignature)
+      console.log('✅ Proof verified:', txSignature)
       setTransactionSignature(txSignature)
 
       // Call success callback

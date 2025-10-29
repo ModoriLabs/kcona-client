@@ -7,7 +7,7 @@ import { Program } from '@coral-xyz/anchor'
 import { useZkEscrowProgram } from 'src/hooks/useZkEscrowProgram'
 import { COLLECTION_MINT, getCollectionState } from 'src/constants'
 import splNftIdl from 'src/lib/idl/spl_nft.json'
-import { SplNft } from '@/src/lib/types/spl_nft'
+import { SplNft } from 'src/lib/types/spl_nft'
 
 interface CollectionState {
   collectionMint: string

@@ -1,3 +1,4 @@
+import { keccak256, toUtf8Bytes } from 'ethers'
 import { ProofResult } from 'src/components/step/Proof'
 import { BN } from '@coral-xyz/anchor'
 
@@ -117,4 +118,14 @@ export function convertProofToAnchor(proofResult: ProofResult): AnchorProof {
   })
 
   return anchorProof
+}
+
+/**
+ * Calculate deterministic nullifier hash from identifier
+ * Returns raw keccak256 hash bytes (32 bytes) as Buffer
+ */
+export function calculateNullifier(identifier: string): Buffer {
+  const hashHex = keccak256(toUtf8Bytes(identifier))
+  // Convert hex string (with 0x prefix) to Buffer
+  return Buffer.from(hashHex.slice(2), 'hex')
 }
