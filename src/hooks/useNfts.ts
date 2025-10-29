@@ -17,13 +17,16 @@ export function useNfts() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const fetchNfts = async () => {
+  const fetchNfts = async (options?: { background?: boolean }) => {
     if (!publicKey) {
       setNfts([])
       return
     }
 
-    setIsLoading(true)
+    // Only show loading indicator for initial fetch, not background refetch
+    if (!options?.background) {
+      setIsLoading(true)
+    }
     setError(null)
 
     try {
@@ -33,7 +36,9 @@ export function useNfts() {
       console.error('Error fetching NFTs:', err)
       setError('NFT 목록을 불러오는데 실패했습니다')
     } finally {
-      setIsLoading(false)
+      if (!options?.background) {
+        setIsLoading(false)
+      }
     }
   }
 

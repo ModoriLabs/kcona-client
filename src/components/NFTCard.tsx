@@ -32,7 +32,6 @@ function NFTCard({ nft }: { nft: NftWithMetadata }) {
         }
 
         const metadata: NftMetadata = await response.json()
-        console.log('metadata', metadata)
         setImageUrl(metadata.image)
       } catch (err) {
         console.error('Error fetching NFT metadata:', err)

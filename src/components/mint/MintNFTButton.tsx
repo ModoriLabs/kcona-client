@@ -7,6 +7,7 @@ import { getAssociatedTokenAddress } from '@solana/spl-token'
 import { toast } from 'sonner'
 import { useZkEscrowProgram } from 'src/hooks/useZkEscrowProgram'
 import { useTransactionToast } from 'src/hooks/useTransactionToast'
+import { usePendingMint } from 'src/context/PendingMintContext'
 import {
   getVerificationResult,
   getCollectionState,
@@ -28,6 +29,7 @@ interface MintNFTButtonProps {
 export function MintNFTButton({ onSuccess }: MintNFTButtonProps) {
   const { publicKey, connected, sendTransaction } = useWallet()
   const { program, isReady } = useZkEscrowProgram()
+  const { setPendingMint } = usePendingMint()
   const [isLoading, setIsLoading] = useState(false)
   const [transactionSignature, setTransactionSignature] = useState<
     string | null
@@ -44,7 +46,11 @@ export function MintNFTButton({ onSuccess }: MintNFTButtonProps) {
 
       // Generate new NFT mint
       const mintKeypair = Keypair.generate()
-      console.log('NFT Mint address:', mintKeypair.publicKey.toBase58())
+      const mintAddress = mintKeypair.publicKey.toBase58()
+      console.log('NFT Mint address:', mintAddress)
+
+      // Set pending mint in context BEFORE minting
+      setPendingMint(mintAddress)
 
       // Get verification result PDA
       const verificationResultPda = await getVerificationResult(publicKey)

@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import './globals.css'
 import { SolanaWalletProvider } from 'src/providers/WalletProvider'
+import { PendingMintProvider } from 'src/context/PendingMintContext'
 import { Toaster } from 'sonner'
 
 const geistSans = Geist({
@@ -28,7 +29,9 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <SolanaWalletProvider>{children}</SolanaWalletProvider>
+        <SolanaWalletProvider>
+          <PendingMintProvider>{children}</PendingMintProvider>
+        </SolanaWalletProvider>
         <Toaster position="bottom-right" richColors />
       </body>
     </html>

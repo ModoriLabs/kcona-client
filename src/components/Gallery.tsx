@@ -1,15 +1,56 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useNfts, NftWithMetadata } from 'src/hooks/useNfts'
-import { isLocalnet, SOLANA_CLUSTER } from 'src/constants'
+import { useEffect } from 'react'
+import { useNfts } from 'src/hooks/useNfts'
+import { usePendingMint } from 'src/context/PendingMintContext'
 import NFTCard from './NFTCard'
 
 export function Gallery() {
   const { nfts, isLoading, error, refetch } = useNfts()
-  const nftsWithoutCollection = nfts.filter(
-    (nft) => !nft.metadata.uri.includes('collection'),
-  )
+  const { pendingMintAddress, clearPendingMint } = usePendingMint()
+  const nftsWithoutCollection = nfts
+    .filter((nft) => !nft.metadata.uri.includes('collection'))
+    .sort((a, b) => {
+      // https://kcona.s3.ap-northeast-2.amazonaws.com/json/16.json -> 16
+      const getIndex = (uri: string) => {
+        const match = uri.match(/\/(\d+)(?:\.json)?$/)
+        return match ? parseInt(match[1]) : 0
+      }
+      // Sort descending (higher index first - newest mints)
+      return getIndex(b.metadata.uri) - getIndex(a.metadata.uri)
+    })
+
+  // Polling for pending NFT
+  useEffect(() => {
+    if (!pendingMintAddress) return
+
+    console.log('Starting polling for pending NFT:', pendingMintAddress)
+
+    // Poll every 2 seconds
+    const pollInterval = setInterval(async () => {
+      console.log('Polling for NFT:', pendingMintAddress)
+      // Use background refetch to avoid loading state
+      await refetch({ background: true })
+
+      // Check if the pending NFT is now in the list
+      const nftExists = nfts.some((nft) => nft.mint === pendingMintAddress)
+      if (nftExists) {
+        console.log('NFT found in list, clearing pending mint')
+        clearPendingMint()
+      }
+    }, 2000)
+
+    // Stop polling after 60 seconds
+    const timeout = setTimeout(() => {
+      console.log('Polling timeout, clearing pending mint')
+      clearPendingMint()
+    }, 60000)
+
+    return () => {
+      clearInterval(pollInterval)
+      clearTimeout(timeout)
+    }
+  }, [pendingMintAddress, nfts, refetch, clearPendingMint])
 
   if (isLoading) {
     return (
@@ -37,6 +78,7 @@ export function Gallery() {
       </div>
     )
   }
+  console.log('nftsWithoutCollection', nftsWithoutCollection)
 
   if (nftsWithoutCollection.length === 0) {
     return (
@@ -51,33 +93,74 @@ export function Gallery() {
       </div>
     )
   }
-
-  const explorerUrl = isLocalnet
-    ? 'http://localhost:8899'
-    : `https://explorer.solana.com/address`
-
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">내 NFT 컬렉션</h2>
-        <button
-          onClick={refetch}
-          className="rounded-full bg-gray-100 px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-200">
-          새로고침
-        </button>
-      </div>
-
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {nftsWithoutCollection.map((nft) => (
-          <NFTCard key={nft.mint} nft={nft} />
-        ))}
+        {/* Pending NFT with loading card */}
+        {pendingMintAddress && (
+          <PendingNFTCard
+            key={pendingMintAddress}
+            mintAddress={pendingMintAddress}
+          />
+        )}
+        {/* Existing NFTs - exclude pending mint if it exists in the list */}
+        {nftsWithoutCollection
+          .filter((nft) => nft.mint !== pendingMintAddress)
+          .map((nft) => (
+            <NFTCard key={nft.mint} nft={nft} />
+          ))}
       </div>
 
-      {nftsWithoutCollection.length > 0 && (
+      {(nftsWithoutCollection.length > 0 || pendingMintAddress) && (
         <div className="text-center text-sm text-gray-500">
-          총 {nftsWithoutCollection.length}개의 NFT
+          총 {nftsWithoutCollection.length + (pendingMintAddress ? 1 : 0)}개의
+          NFT
+          {pendingMintAddress && (
+            <span className="ml-2 text-blue-600">(1개 민팅 중)</span>
+          )}
         </div>
       )}
+    </div>
+  )
+}
+
+interface PendingNFTCardProps {
+  mintAddress: string
+}
+
+function PendingNFTCard({ mintAddress }: PendingNFTCardProps) {
+  return (
+    <div className="overflow-hidden rounded-lg border border-blue-200 bg-white shadow-sm">
+      {/* Loading Image Area */}
+      <div
+        className="relative w-full animate-pulse bg-gradient-to-br from-blue-100 to-purple-100"
+        style={{ aspectRatio: '7/11' }}>
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-blue-500 border-t-transparent"></div>
+            <p className="mt-4 text-sm font-medium text-gray-600">
+              NFT 민팅 중...
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Loading Info */}
+      <div className="p-4">
+        <div className="mb-2 h-6 w-3/4 animate-pulse rounded bg-gray-200"></div>
+        <div className="mb-3 h-4 w-1/2 animate-pulse rounded bg-gray-100"></div>
+
+        {/* Mint Address */}
+        <div className="mb-3 rounded bg-gray-50 p-2">
+          <p className="text-xs text-gray-500">Mint Address</p>
+          <p className="break-all font-mono text-xs text-gray-700">
+            {mintAddress}
+          </p>
+        </div>
+
+        {/* Loading Button */}
+        <div className="h-10 w-full animate-pulse rounded-full bg-gray-200"></div>
+      </div>
     </div>
   )
 }
