@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { RefreshCw } from 'lucide-react'
 import { useNfts } from 'src/hooks/useNfts'
 import { usePendingMint } from 'src/context/PendingMintContext'
@@ -9,6 +9,8 @@ import NFTCard from './NFTCard'
 export function Gallery() {
   const { nfts, isLoading, error, refetch } = useNfts()
   const { pendingMintAddress, clearPendingMint } = usePendingMint()
+  const [celebratingMint, setCelebratingMint] = useState<string | null>(null)
+
   const nftsWithoutCollection = nfts
     .filter((nft) => !nft.metadata.uri.includes('collection'))
     .sort((a, b) => {
@@ -33,7 +35,14 @@ export function Gallery() {
       // Check if the pending NFT is now in the list
       const nftExists = nfts.some((nft) => nft.mint === pendingMintAddress)
       if (nftExists) {
+        // Show celebration animation
+        setCelebratingMint(pendingMintAddress)
         clearPendingMint()
+
+        // Remove celebration after 3 seconds
+        setTimeout(() => {
+          setCelebratingMint(null)
+        }, 3000)
       }
     }, 2000)
 
@@ -118,7 +127,11 @@ export function Gallery() {
         {nftsWithoutCollection
           .filter((nft) => nft.mint !== pendingMintAddress)
           .map((nft) => (
-            <NFTCard key={nft.mint} nft={nft} />
+            <NFTCard
+              key={nft.mint}
+              nft={nft}
+              showCelebration={celebratingMint === nft.mint}
+            />
           ))}
       </div>
     </div>

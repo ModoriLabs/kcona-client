@@ -8,6 +8,7 @@ import {
   VerificationResultViewer,
   VerificationResult,
 } from '../mint/VerificationResultViewer'
+import { SOLANA_CLUSTER } from '@/src/constants'
 
 export function Mint({
   proofResult,
@@ -77,11 +78,11 @@ export function Mint({
         </div>
 
         <a
-          href={`https://explorer.solana.com/address/${mintAddress}?cluster=custom&customUrl=http://localhost:8899`}
+          href={`https://explorer.solana.com/address/${mintAddress}?cluster=${SOLANA_CLUSTER}`}
           target="_blank"
           rel="noopener noreferrer"
           className="w-full rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 text-center font-semibold text-primary-foreground transition-all hover:opacity-90 hover:shadow-lg">
-          View in Explorer (Localnet)
+          View in Explorer
         </a>
       </div>
     )
@@ -114,9 +115,7 @@ export function Mint({
               1
             </span>
             <div>
-              <p className="font-medium text-foreground">
-                Verify Proof (verifyProof)
-              </p>
+              <p className="font-medium text-foreground">Verify Proof</p>
               <p className="text-xs text-muted-foreground">
                 Verify the ZK Proof and store the result in a PDA.
               </p>
@@ -139,9 +138,7 @@ export function Mint({
               2
             </span>
             <div>
-              <p className="font-medium text-foreground">
-                Mint NFT (mintWithVerifiedProof)
-              </p>
+              <p className="font-medium text-foreground">Mint NFT</p>
               <p className="text-xs text-muted-foreground">
                 Mint the NFT using the verified proof result.
               </p>

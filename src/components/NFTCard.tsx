@@ -1,7 +1,8 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { ExternalLink } from 'lucide-react'
+import confetti from 'canvas-confetti'
 import { Badge } from './ui/badge'
 import { useNfts, NftWithMetadata } from 'src/hooks/useNfts'
 import { isLocalnet, SOLANA_CLUSTER } from 'src/constants'
@@ -17,10 +18,33 @@ type NftMetadata = {
   }>
 }
 
-function NFTCard({ nft }: { nft: NftWithMetadata }) {
+function NFTCard({
+  nft,
+  showCelebration = false,
+}: {
+  nft: NftWithMetadata
+  showCelebration?: boolean
+}) {
   const [imageUrl, setImageUrl] = useState<string | null>(null)
   const [imageLoading, setImageLoading] = useState(true)
   const [imageError, setImageError] = useState(false)
+  const cardRef = useRef<HTMLDivElement>(null)
+  const showedConfetti = useRef(false)
+
+  useEffect(() => {
+    if (showCelebration && cardRef.current && !showedConfetti.current) {
+      if (!cardRef.current) return
+      const rect = cardRef.current.getBoundingClientRect()
+      const x = (rect.left + rect.width / 2) / window.innerWidth
+      const y = (rect.top + rect.height / 2) / window.innerHeight
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { x, y },
+      })
+      showedConfetti.current = true
+    }
+  }, [showCelebration])
 
   useEffect(() => {
     const fetchMetadata = async () => {
@@ -51,9 +75,20 @@ function NFTCard({ nft }: { nft: NftWithMetadata }) {
     : `https://explorer.solana.com/address/${nft.mint}?cluster=${SOLANA_CLUSTER}`
 
   return (
-    <div className="group overflow-hidden rounded-lg border border-primary/20 bg-card/50 shadow-sm backdrop-blur transition-all hover:border-primary/50 hover:shadow-md">
+    <div className="group relative overflow-hidden rounded-lg border border-primary/20 bg-card/50 shadow-sm backdrop-blur transition-all hover:border-primary/50 hover:shadow-md">
+      {showCelebration && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-background/95 backdrop-blur-sm animate-in fade-in duration-500">
+          <div className="text-center">
+            <p className="text-lg text-muted-foreground">
+              Congratulations! Your NFT is minted successfully!
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* NFT Image */}
       <div
+        ref={cardRef}
         className="relative w-full overflow-hidden bg-gradient-to-br from-primary/10 to-secondary/10"
         style={{ aspectRatio: '7/11' }}>
         {imageLoading ? (

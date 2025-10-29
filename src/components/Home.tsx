@@ -88,8 +88,8 @@ export function Home() {
             onClick={() => setCurrentView(View.WORKFLOW)}
             className={`rounded-md px-6 py-2 font-medium transition-all ${
               currentView === View.WORKFLOW
-                ? 'bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-md'
-                : 'cursor-pointer text-muted-foreground hover:text-foreground'
+                ? 'bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-md '
+                : 'cursor-pointer text-muted-foreground hover:text-foreground border border-gray-300'
             }`}>
             Purchase
           </button>
@@ -98,7 +98,7 @@ export function Home() {
             className={`rounded-md px-6 py-2 font-medium transition-all ${
               currentView === View.GALLERY
                 ? 'bg-gradient-to-r from-primary to-secondary text-primary-foreground shadow-md'
-                : 'cursor-pointer text-muted-foreground hover:text-foreground'
+                : 'cursor-pointer text-muted-foreground hover:text-foreground border border-gray-300'
             }`}>
             My NFTs
           </button>
