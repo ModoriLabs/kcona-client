@@ -24,25 +24,20 @@ export function Gallery() {
   useEffect(() => {
     if (!pendingMintAddress) return
 
-    console.log('Starting polling for pending NFT:', pendingMintAddress)
-
     // Poll every 2 seconds
     const pollInterval = setInterval(async () => {
-      console.log('Polling for NFT:', pendingMintAddress)
       // Use background refetch to avoid loading state
       await refetch({ background: true })
 
       // Check if the pending NFT is now in the list
       const nftExists = nfts.some((nft) => nft.mint === pendingMintAddress)
       if (nftExists) {
-        console.log('NFT found in list, clearing pending mint')
         clearPendingMint()
       }
     }, 2000)
 
     // Stop polling after 60 seconds
     const timeout = setTimeout(() => {
-      console.log('Polling timeout, clearing pending mint')
       clearPendingMint()
     }, 60000)
 
@@ -78,9 +73,8 @@ export function Gallery() {
       </div>
     )
   }
-  console.log('nftsWithoutCollection', nftsWithoutCollection)
 
-  if (nftsWithoutCollection.length === 0) {
+  if (nftsWithoutCollection.length === 0 && !pendingMintAddress) {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">

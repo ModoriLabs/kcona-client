@@ -24,7 +24,6 @@ export const getNFTsWithMetadata = async (publicKey: PublicKey) => {
     const tokenAmount = data.tokenAmount
     return tokenAmount.decimals === 0 && tokenAmount.uiAmount === 1
   })
-  console.log('potentialNFTs', potentialNFTs)
 
   // 2. check if Metaplex metadata exists
   const nftsWithMetadata = []
