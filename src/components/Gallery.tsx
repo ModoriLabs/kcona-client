@@ -61,7 +61,6 @@ export function Gallery() {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
-          <div className="mb-4 text-4xl">🔄</div>
           <p className="text-muted-foreground">Loading NFTs...</p>
         </div>
       </div>
@@ -88,7 +87,6 @@ export function Gallery() {
     return (
       <div className="flex min-h-[400px] items-center justify-center">
         <div className="text-center">
-          <div className="mb-4 text-6xl">🖼️</div>
           <h3 className="mb-2 text-xl font-semibold">No NFTs</h3>
           <p className="text-muted-foreground">
             Send KRW and generate the proof to mint your first NFT!
@@ -103,7 +101,7 @@ export function Gallery() {
         <div>
           <h2 className="mb-2 text-3xl font-bold">My NFTs</h2>
           <p className="text-muted-foreground">
-            Total {nftsWithoutCollection.length + (pendingMintAddress ? 1 : 0)}
+            Total {nftsWithoutCollection.length + (pendingMintAddress ? 1 : 0)}{' '}
             NFTs
           </p>
         </div>

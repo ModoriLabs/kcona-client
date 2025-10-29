@@ -61,10 +61,10 @@ export function Home() {
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-sm">
-        <button
-          onClick={() => window.location.reload()}
-          className="container mx-auto flex items-center justify-between px-4 py-4 cursor-pointer">
-          <div className="flex items-center gap-3">
+        <div className="container mx-auto flex items-center justify-between px-2 py-4">
+          <button
+            className="flex items-center gap-3 cursor-pointer"
+            onClick={() => window.location.reload()}>
             <Image
               src="/logo.png"
               alt="Kcona Logo"
@@ -75,9 +75,9 @@ export function Home() {
             <h1 className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-2xl font-bold text-transparent">
               Kcona
             </h1>
-          </div>
+          </button>
           <WalletMultiButton />
-        </button>
+        </div>
       </header>
 
       {/* Main Content */}
