@@ -139,7 +139,7 @@ export const SKIP_PREFLIGHT = process.env.NEXT_PUBLIC_SKIP_PREFLIGHT === 'true'
 
 export const getPaymentConfig = async (): Promise<anchor.web3.PublicKey> => {
   return anchor.web3.PublicKey.findProgramAddressSync(
-    [Buffer.from(SEEDS.PAYMENT_CONFIG), DEPLOYER_ADDRESS.toBuffer()],
+    [Buffer.from(SEEDS.PAYMENT_CONFIG)],
     ZK_ESCROW_PROGRAM_ID,
   )[0]
 }

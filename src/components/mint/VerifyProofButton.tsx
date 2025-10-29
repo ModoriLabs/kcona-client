@@ -87,15 +87,13 @@ export function VerifyProofButton({
       const verificationResultPda = await getVerificationResult(publicKey)
       console.log('Verification Result PDA:', verificationResultPda.toBase58())
 
-      // Call verifyProof instruction
-      console.log('Calling verifyProof...')
       const txSignature = await program.methods
         .verifyProof(anchorProof, [ADMIN_ADDRESS], 1)
         .accounts({
           signer: publicKey,
         })
         .rpc({
-          skipPreflight: true,
+          skipPreflight: false,
         })
 
       console.log('✅ Proof verified:', txSignature)
