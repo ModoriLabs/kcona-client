@@ -17,7 +17,8 @@ export type NullifierRegistry = {
       name: 'checkNullifier'
       docs: [
         'Check if a nullifier has been used (read-only)',
-        'This is called via CPI from other programs',
+        'This is called via CPI from other programs to prevent replay attacks',
+        'Returns error if nullifier is already used',
       ]
       discriminator: [27, 96, 60, 156, 54, 225, 221, 73]
       accounts: [
@@ -40,7 +41,9 @@ export type NullifierRegistry = {
       args: [
         {
           name: 'nullifierHash'
-          type: 'string'
+          type: {
+            array: ['u8', 32]
+          }
         },
       ]
     },
@@ -160,7 +163,9 @@ export type NullifierRegistry = {
       args: [
         {
           name: 'nullifierHash'
-          type: 'string'
+          type: {
+            array: ['u8', 32]
+          }
         },
       ]
     },
@@ -201,7 +206,9 @@ export type NullifierRegistry = {
         fields: [
           {
             name: 'nullifierHash'
-            type: 'string'
+            type: {
+              array: ['u8', 32]
+            }
           },
           {
             name: 'usedAt'

@@ -45,10 +45,6 @@ export type ZkEscrowSol = {
                   103,
                 ]
               },
-              {
-                kind: 'account'
-                path: 'authority'
-              },
             ]
           }
         },
@@ -265,128 +261,34 @@ export type ZkEscrowSol = {
           }
         },
         {
-          name: 'systemProgram'
-          address: '11111111111111111111111111111111'
-        },
-      ]
-      args: [
-        {
-          name: 'proof'
-          type: {
-            defined: {
-              name: 'proof'
-            }
-          }
-        },
-        {
-          name: 'expectedWitnesses'
-          type: {
-            vec: 'string'
-          }
-        },
-        {
-          name: 'requiredThreshold'
-          type: 'u8'
-        },
-      ]
-    },
-    {
-      name: 'verifyProofAndMint'
-      docs: [
-        'Verify ZK proof and mint NFT',
-        '1. Verify proof signatures',
-        '2. Mint NFT via CPI to spl-nft',
-        'Note: Payment validation happens off-chain before calling this function',
-      ]
-      discriminator: [147, 203, 157, 77, 210, 140, 1, 78]
-      accounts: [
-        {
-          name: 'signer'
-          writable: true
-          signer: true
-        },
-        {
-          name: 'mint'
-          docs: ['New NFT mint']
-          writable: true
-          signer: true
-        },
-        {
-          name: 'destination'
-          writable: true
-        },
-        {
-          name: 'metadata'
-          writable: true
-        },
-        {
-          name: 'masterEdition'
-          writable: true
-        },
-        {
-          name: 'mintAuthority'
-        },
-        {
-          name: 'collectionMint'
-          docs: ['Collection mint']
-          writable: true
-        },
-        {
-          name: 'collectionState'
-          docs: ['Collection state (price 정보 포함)']
-          writable: true
+          name: 'paymentConfig'
           pda: {
             seeds: [
               {
                 kind: 'const'
                 value: [
-                  99,
-                  111,
-                  108,
-                  108,
+                  112,
+                  97,
+                  121,
+                  109,
                   101,
-                  99,
+                  110,
                   116,
-                  105,
+                  95,
+                  99,
                   111,
                   110,
-                  95,
-                  115,
-                  116,
-                  97,
-                  116,
-                  101,
+                  102,
+                  105,
+                  103,
                 ]
               },
-              {
-                kind: 'account'
-                path: 'collectionMint'
-              },
             ]
-            program: {
-              kind: 'account'
-              path: 'splNftProgram'
-            }
           }
-        },
-        {
-          name: 'splNftProgram'
-          address: '9fH1v7Pa2nUAgd3xbszA1bpSeH8NRL8iQVWuWUuWot3p'
         },
         {
           name: 'systemProgram'
           address: '11111111111111111111111111111111'
-        },
-        {
-          name: 'tokenProgram'
-          address: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'
-        },
-        {
-          name: 'associatedTokenProgram'
-          address: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL'
-        },
-        {
-          name: 'tokenMetadataProgram'
         },
       ]
       args: [
@@ -412,88 +314,12 @@ export type ZkEscrowSol = {
     },
     {
       name: 'verifyProofOnly'
-      docs: [
-        'Verify proof without payment validation (for unit testing)',
-        'This exposes the internal proof verification logic',
-      ]
+      docs: ['This exposes the internal proof verification logic']
       discriminator: [91, 4, 171, 117, 80, 113, 185, 40]
       accounts: [
         {
           name: 'signer'
           signer: true
-        },
-      ]
-      args: [
-        {
-          name: 'proof'
-          type: {
-            defined: {
-              name: 'proof'
-            }
-          }
-        },
-        {
-          name: 'expectedWitnesses'
-          type: {
-            vec: 'string'
-          }
-        },
-        {
-          name: 'requiredThreshold'
-          type: 'u8'
-        },
-      ]
-    },
-    {
-      name: 'verifyProofSignatures'
-      docs: [
-        '',
-        'This function verifies a complete proof structure including:',
-        '1. Claim identifier matches hash of claim info',
-        '2. Signatures are valid and recover to expected witnesses',
-        '3. At least `required_threshold` valid witness signatures exist',
-        '4. Payment details validation against stored config',
-        '',
-        '# Arguments',
-        '* `proof` - Complete proof containing claim_info and signed_claim',
-        '* `expected_witnesses` - List of valid witness addresses',
-        '* `required_threshold` - Minimum number of valid signatures required',
-      ]
-      discriminator: [211, 201, 70, 37, 35, 35, 133, 191]
-      accounts: [
-        {
-          name: 'signer'
-          signer: true
-        },
-        {
-          name: 'paymentConfig'
-          pda: {
-            seeds: [
-              {
-                kind: 'const'
-                value: [
-                  112,
-                  97,
-                  121,
-                  109,
-                  101,
-                  110,
-                  116,
-                  95,
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103,
-                ]
-              },
-              {
-                kind: 'account'
-                path: 'signer'
-              },
-            ]
-          }
         },
       ]
       args: [
@@ -535,73 +361,83 @@ export type ZkEscrowSol = {
   errors: [
     {
       code: 6000
+      name: 'invalidThreshold'
+      msg: 'Invalid threshold'
+    },
+    {
+      code: 6001
       name: 'invalidSignature'
       msg: 'Invalid signature format'
     },
     {
-      code: 6001
+      code: 6002
       name: 'invalidRecoveryId'
       msg: 'Invalid recovery ID (must be 0 or 1)'
     },
     {
-      code: 6002
+      code: 6003
       name: 'recoveryFailed'
       msg: 'Failed to recover signer address'
     },
     {
-      code: 6003
+      code: 6004
       name: 'addressMismatch'
       msg: 'Recovered address does not match expected address'
     },
     {
-      code: 6004
+      code: 6005
       name: 'identifierMismatch'
       msg: 'Claim identifier does not match expected value'
     },
     {
-      code: 6005
+      code: 6006
       name: 'invalidHex'
       msg: 'Failed to decode hex string'
     },
     {
-      code: 6006
+      code: 6007
       name: 'invalidBankAccount'
       msg: 'Invalid bank account'
     },
     {
-      code: 6007
+      code: 6008
       name: 'invalidAmount'
       msg: 'Amount must be greater than zero'
     },
     {
-      code: 6008
+      code: 6009
       name: 'invalidCurrency'
       msg: 'Invalid currency - only KRW supported'
     },
     {
-      code: 6009
+      code: 6010
       name: 'recipientMismatch'
       msg: 'Recipient bank account mismatch'
     },
     {
-      code: 6010
+      code: 6011
       name: 'amountMismatch'
       msg: 'Payment amount mismatch'
     },
     {
-      code: 6011
+      code: 6012
       name: 'unauthorizedUser'
       msg: 'Unauthorized: user does not own this verification result'
     },
     {
-      code: 6012
+      code: 6013
       name: 'alreadyUsed'
       msg: 'Verification result has already been used'
     },
     {
-      code: 6013
+      code: 6014
       name: 'verificationExpired'
       msg: 'Verification has expired (older than 5 minutes)'
+    },
+    {
+      code: 6015
+      name: 'nullifierAlreadyUsed'
+      msg: 'Nullifier has already been used (replay attack prevented)'
     },
   ]
   types: [
@@ -670,6 +506,10 @@ export type ZkEscrowSol = {
           },
           {
             name: 'uriPrefix'
+            type: 'string'
+          },
+          {
+            name: 'collectionUri'
             type: 'string'
           },
           {

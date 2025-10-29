@@ -11,7 +11,8 @@
       "name": "check_nullifier",
       "docs": [
         "Check if a nullifier has been used (read-only)",
-        "This is called via CPI from other programs"
+        "This is called via CPI from other programs to prevent replay attacks",
+        "Returns error if nullifier is already used"
       ],
       "discriminator": [
         27,
@@ -53,7 +54,12 @@
       "args": [
         {
           "name": "nullifier_hash",
-          "type": "string"
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
         }
       ]
     },
@@ -203,7 +209,12 @@
       "args": [
         {
           "name": "nullifier_hash",
-          "type": "string"
+          "type": {
+            "array": [
+              "u8",
+              32
+            ]
+          }
         }
       ]
     }
@@ -264,7 +275,12 @@
         "fields": [
           {
             "name": "nullifier_hash",
-            "type": "string"
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
           },
           {
             "name": "used_at",

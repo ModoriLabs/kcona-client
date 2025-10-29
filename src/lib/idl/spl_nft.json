@@ -209,7 +209,11 @@
           "type": "string"
         },
         {
-          "name": "uri",
+          "name": "collection_uri",
+          "type": "string"
+        },
+        {
+          "name": "uri_prefix",
           "type": "string"
         },
         {
@@ -522,6 +526,10 @@
           },
           {
             "name": "uri_prefix",
+            "type": "string"
+          },
+          {
+            "name": "collection_uri",
             "type": "string"
           },
           {

@@ -196,7 +196,11 @@ export type SplNft = {
           type: 'string'
         },
         {
-          name: 'uri'
+          name: 'collectionUri'
+          type: 'string'
+        },
+        {
+          name: 'uriPrefix'
           type: 'string'
         },
         {
@@ -462,6 +466,10 @@ export type SplNft = {
           },
           {
             name: 'uriPrefix'
+            type: 'string'
+          },
+          {
+            name: 'collectionUri'
             type: 'string'
           },
           {
