@@ -47,6 +47,7 @@ export function Home() {
 
   const handleMintSuccess = () => {
     setCurrentView(View.GALLERY)
+    setCurrentStep(Step.TRANSFER)
   }
 
   // Step 1: Wallet Connection

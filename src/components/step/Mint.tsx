@@ -4,7 +4,10 @@ import { useState } from 'react'
 import { ProofResult } from './Proof'
 import { VerifyProofButton } from '../mint/VerifyProofButton'
 import { MintNFTButton } from '../mint/MintNFTButton'
-import { VerificationResultViewer } from '../mint/VerificationResultViewer'
+import {
+  VerificationResultViewer,
+  VerificationResult,
+} from '../mint/VerificationResultViewer'
 import { CollectionStateViewer } from '../mint/CollectionStateViewer'
 
 export function Mint({
@@ -17,12 +20,21 @@ export function Mint({
   const [verificationSignature, setVerificationSignature] = useState<
     string | null
   >(null)
+  const [verificationResult, setVerificationResult] =
+    useState<VerificationResult | null>(null)
   const [mintAddress, setMintAddress] = useState<string | null>(null)
   const [mintSignature, setMintSignature] = useState<string | null>(null)
 
   const handleVerificationSuccess = (signature: string) => {
     setVerificationSignature(signature)
     console.log('✅ Proof verified:', signature)
+  }
+
+  const handleVerificationResultFetched = (
+    result: VerificationResult | null,
+  ) => {
+    setVerificationResult(result)
+    console.log('📋 Verification result:', result)
   }
 
   const handleMintSuccess = (address: string, signature: string) => {
@@ -38,6 +50,10 @@ export function Mint({
       }, 2000)
     }
   }
+
+  // Check if mint button should be enabled
+  const canMint =
+    verificationResult !== null && verificationResult.isUsed === false
 
   // Success state - show minted NFT
   if (mintAddress && mintSignature) {
@@ -149,28 +165,41 @@ export function Mint({
         )}
       </div>
 
-      {/* Collection State Viewer */}
-      <div className="space-y-3">
-        <h3 className="text-sm font-semibold text-gray-700">
-          🎨 Collection State (PDA)
-        </h3>
-        <CollectionStateViewer />
-      </div>
+      {/* <CollectionStateViewer /> */}
 
       {/* Verification Result Viewer */}
       <div className="space-y-3">
         <h3 className="text-sm font-semibold text-gray-700">
-          📋 Verification Result (PDA)
+          📋 Verification Result
         </h3>
-        <VerificationResultViewer />
+        <VerificationResultViewer
+          onResultFetched={handleVerificationResultFetched}
+          disabled={!verificationSignature}
+        />
+        {!verificationSignature && (
+          <p className="text-center text-xs text-gray-500">
+            Step 1을 먼저 완료해주세요
+          </p>
+        )}
+        {verificationResult?.isUsed && (
+          <p className="text-center text-xs text-red-600">
+            ⚠️ 이미 사용된 proof입니다
+          </p>
+        )}
       </div>
 
       {/* Step 2: Mint NFT */}
       <div className="space-y-3">
-        <MintNFTButton onSuccess={handleMintSuccess} />
-        {!verificationSignature && (
+        <MintNFTButton onSuccess={handleMintSuccess} disabled={!canMint} />
+        {!canMint && (
           <p className="text-center text-xs text-gray-500">
-            Step 1을 먼저 완료해주세요
+            {!verificationSignature
+              ? 'Step 1을 먼저 완료해주세요'
+              : !verificationResult
+                ? 'Verification Result를 확인해주세요'
+                : verificationResult.isUsed
+                  ? '이미 사용된 proof입니다'
+                  : 'Verification Result를 확인해주세요'}
           </p>
         )}
       </div>

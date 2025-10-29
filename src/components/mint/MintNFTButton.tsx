@@ -20,13 +20,17 @@ import {
 
 interface MintNFTButtonProps {
   onSuccess?: (mintAddress: string, signature: string) => void
+  disabled?: boolean
 }
 
 /**
  * Button component that mints NFT using verified proof
  * Two-transaction pattern: Step 2 - Mint NFT using verified proof result
  */
-export function MintNFTButton({ onSuccess }: MintNFTButtonProps) {
+export function MintNFTButton({
+  onSuccess,
+  disabled = false,
+}: MintNFTButtonProps) {
   const { publicKey, connected, sendTransaction } = useWallet()
   const { program, isReady } = useZkEscrowProgram()
   const { setPendingMint } = usePendingMint()
@@ -48,9 +52,6 @@ export function MintNFTButton({ onSuccess }: MintNFTButtonProps) {
       const mintKeypair = Keypair.generate()
       const mintAddress = mintKeypair.publicKey.toBase58()
       console.log('NFT Mint address:', mintAddress)
-
-      // Set pending mint in context BEFORE minting
-      setPendingMint(mintAddress)
 
       // Get verification result PDA
       const verificationResultPda = await getVerificationResult(publicKey)
@@ -109,6 +110,9 @@ export function MintNFTButton({ onSuccess }: MintNFTButtonProps) {
 
       setTransactionSignature(txSignature)
 
+      // Set pending mint in context BEFORE minting
+      setPendingMint(mintAddress)
+
       // Call success callback
       if (onSuccess) {
         onSuccess(mintKeypair.publicKey.toBase58(), txSignature)
@@ -138,7 +142,7 @@ export function MintNFTButton({ onSuccess }: MintNFTButtonProps) {
   return (
     <button
       onClick={handleMint}
-      disabled={isLoading || !connected || !isReady}
+      disabled={isLoading || !connected || !isReady || disabled}
       className="h-11 w-full rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-base font-medium text-white transition-all hover:from-blue-700 hover:to-purple-700 disabled:cursor-not-allowed disabled:opacity-50">
       {isLoading ? (
         <div className="flex items-center justify-center">

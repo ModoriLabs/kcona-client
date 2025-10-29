@@ -6,14 +6,22 @@ import { toast } from 'sonner'
 import { useZkEscrowProgram } from 'src/hooks/useZkEscrowProgram'
 import { getVerificationResult } from 'src/constants'
 
-interface VerificationResult {
+export interface VerificationResult {
   user: string
   verifiedAt: number
   claimIdentifier: string
   isUsed: boolean
 }
 
-export function VerificationResultViewer() {
+interface VerificationResultViewerProps {
+  onResultFetched?: (result: VerificationResult | null) => void
+  disabled?: boolean
+}
+
+export function VerificationResultViewer({
+  onResultFetched,
+  disabled = false,
+}: VerificationResultViewerProps) {
   const { publicKey, connected } = useWallet()
   const { program, isReady } = useZkEscrowProgram()
   const [isLoading, setIsLoading] = useState(false)
@@ -48,6 +56,12 @@ export function VerificationResultViewer() {
       }
 
       setResult(resultData)
+
+      // Notify parent component
+      if (onResultFetched) {
+        onResultFetched(resultData)
+      }
+
       toast.success('Verification Result Loaded', {
         description: `Verified at: ${new Date(resultData.verifiedAt * 1000).toLocaleString()}`,
       })
@@ -60,6 +74,12 @@ export function VerificationResultViewer() {
         err.message.includes('Account does not exist')
       ) {
         setNotFound(true)
+
+        // Notify parent component
+        if (onResultFetched) {
+          onResultFetched(null)
+        }
+
         toast.info('No Verification Result', {
           description: 'Please verify proof first (Step 1)',
         })
@@ -86,7 +106,7 @@ export function VerificationResultViewer() {
       {/* Fetch Button */}
       <button
         onClick={handleFetchResult}
-        disabled={isLoading || !connected || !isReady}
+        disabled={isLoading || !connected || !isReady || disabled}
         className="h-10 w-full rounded-lg border-2 border-indigo-600 bg-white text-sm font-medium text-indigo-600 transition-all hover:bg-indigo-50 disabled:cursor-not-allowed disabled:opacity-50">
         {isLoading ? (
           <div className="flex items-center justify-center">
@@ -94,7 +114,7 @@ export function VerificationResultViewer() {
             <span>Loading...</span>
           </div>
         ) : (
-          '🔍 Check Verification Result'
+          'Step 2: Check Verification Result'
         )}
       </button>
 
