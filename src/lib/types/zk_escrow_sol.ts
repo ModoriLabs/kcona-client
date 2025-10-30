@@ -197,7 +197,7 @@ export type ZkEscrowSol = {
         },
         {
           name: 'splNftProgram'
-          address: '9fH1v7Pa2nUAgd3xbszA1bpSeH8NRL8iQVWuWUuWot3p'
+          address: '2BrzdsjAbsuvHFcJZswEq6YBNBzuzy2AEXpMR6FLrwck'
         },
         {
           name: 'systemProgram'

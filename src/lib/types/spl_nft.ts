@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/spl_nft.json`.
  */
 export type SplNft = {
-  address: '9fH1v7Pa2nUAgd3xbszA1bpSeH8NRL8iQVWuWUuWot3p'
+  address: '2BrzdsjAbsuvHFcJZswEq6YBNBzuzy2AEXpMR6FLrwck'
   metadata: {
     name: 'splNft'
     version: '0.1.0'
