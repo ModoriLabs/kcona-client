@@ -162,7 +162,7 @@ export function Proof({
         <button
           onClick={handleApplyDefault}
           disabled={!!proofResult?.success}
-          className="flex items-center gap-2 rounded-lg border border-primary/50 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-50 backdrop-blur-sm">
+          className="cursor-pointer flex items-center gap-2 rounded-lg border border-primary/50 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-50 backdrop-blur-sm">
           Apply Default
         </button>
       </div>
@@ -205,7 +205,7 @@ export function Proof({
             {/* Image */}
             <div className="overflow-hidden rounded-lg border border-border/50 bg-background">
               <img
-                src="/kcona_reclaim_explain_new.png"
+                src="/sol_reclaim_explain.png"
                 alt="Solana Reclaim Technical Flow"
                 className="w-full h-auto"
               />

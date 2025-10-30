@@ -28,6 +28,42 @@ export function Connect() {
         <p className="text-lg text-muted-foreground">
           purchase your K-POP star with KRW payment
         </p>
+
+        {/* Demo Introduction */}
+        <div className="max-w-2xl space-y-4 rounded-2xl border border-primary/20 bg-card/50 p-8 backdrop-blur-sm">
+          <div className="space-y-3 text-left">
+            <p className="text-md leading-relaxed text-muted-foreground">
+              This demo explains the{' '}
+              <span className="font-semibold text-foreground">
+                zkTLS-enabled payment module
+              </span>
+              .
+            </p>
+            <p className="text-md leading-relaxed text-muted-foreground">
+              How it works in the process of purchasing an NFT, which we assume
+              as a product.
+            </p>
+          </div>
+
+          <div className="h-px bg-border/50" />
+
+          <div className="space-y-3 text-left">
+            <p className="text-md leading-relaxed text-muted-foreground">
+              Using the zkTLS payment module, you can{' '}
+              <span className="font-semibold text-foreground">
+                verify fiat transfer record
+              </span>{' '}
+              and conduct on-chain transactions.
+            </p>
+            <p className="text-md leading-relaxed text-muted-foreground">
+              In this demo, we&apos;ll show you how to{' '}
+              <span className="font-semibold text-foreground">
+                send KRW and receive an NFT
+              </span>
+              .
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Wallet Connection */}
