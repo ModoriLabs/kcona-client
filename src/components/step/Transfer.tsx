@@ -13,6 +13,7 @@ export function Transfer({ onNext }: { onNext: () => void }) {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
   const [isVideoPopupOpen, setIsVideoPopupOpen] = useState(false)
   const [isCopied, setIsCopied] = useState<{ [key: string]: boolean }>({})
+  const [videoAcknowledged, setVideoAcknowledged] = useState(false)
 
   // For demo: 1,000 KRW
   const transferAmount = '1000'
@@ -33,7 +34,7 @@ export function Transfer({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold">Send KRW</h2>
+        <h2 className="text-2xl font-bold">Send KRW (Offchain)</h2>
       </div>
 
       {/* Video Tutorial Section */}
@@ -59,7 +60,7 @@ export function Transfer({ onNext }: { onNext: () => void }) {
         {/* Desktop: Inline video */}
         <div className="hidden overflow-hidden rounded-2xl border border-border/50 bg-background sm:flex sm:items-center sm:justify-center">
           <video controls className="h-[640px] w-full rounded-lg">
-            <source src="/tossbank_transfer.mp4" type="video/mp4" />
+            <source src="/tossbank_transfer_sol_english.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
@@ -69,7 +70,7 @@ export function Transfer({ onNext }: { onNext: () => void }) {
       <VideoPopup
         isOpen={isVideoPopupOpen}
         onClose={() => setIsVideoPopupOpen(false)}
-        videoSrc="/tossbank_transfer.mp4"
+        videoSrc="/tossbank_transfer_sol_english.mp4"
         title="Tossbank Transfer Demo"
       />
 
@@ -189,10 +190,31 @@ export function Transfer({ onNext }: { onNext: () => void }) {
         </section>
       </section>
 
+      {/* Video Acknowledgment Checkbox */}
+      <div className="flex items-start gap-3 rounded-lg border border-border/50 bg-card/50 p-4 backdrop-blur">
+        <input
+          type="checkbox"
+          id="video-acknowledge"
+          checked={videoAcknowledged}
+          onChange={(e) => setVideoAcknowledged(e.target.checked)}
+          className="mt-0.5 h-4 w-4 cursor-pointer rounded border-border bg-background text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0"
+        />
+        <label
+          htmlFor="video-acknowledge"
+          className="cursor-pointer text-sm text-muted-foreground">
+          I have watched the demo video and understand the transfer process
+        </label>
+      </div>
+
       {/* Actions */}
       <button
         onClick={handleConfirmTransfer}
-        className="w-full rounded-full bg-gradient-to-r from-primary to-secondary px-4 py-3 font-semibold text-primary-foreground transition-all duration-200 hover:shadow-lg hover:opacity-90 cursor-pointer">
+        disabled={!videoAcknowledged}
+        className={`w-full rounded-full px-4 py-3 font-semibold transition-all duration-200 ${
+          videoAcknowledged
+            ? 'cursor-pointer bg-gradient-to-r from-primary to-secondary text-primary-foreground hover:shadow-lg hover:opacity-90'
+            : 'cursor-not-allowed bg-muted text-muted-foreground opacity-50'
+        }`}>
         Next
       </button>
 

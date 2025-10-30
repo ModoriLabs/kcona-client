@@ -44,14 +44,24 @@ export function Proof({
   proofResult: ProofResult | null
   setProofResult: (proof: ProofResult) => void
 }) {
-  const [issueDate, setIssueDate] = useState('20251028')
-  const [certificateNumber, setCertificateNumber] =
-    useState('9312-ANEF-IOMUQZJD')
+  const [issueDate, setIssueDate] = useState('')
+  const [certificateNumber, setCertificateNumber] = useState('')
   const [isLoading, setIsLoading] = useState(false)
+  const [showTechnicalExplain, setShowTechnicalExplain] = useState(false)
   const [validationErrors, setValidationErrors] = useState<{
     issueDate?: string
     certificateNumber?: string
   }>({})
+
+  // Default values for testing
+  const DEFAULT_ISSUE_DATE = '20251028'
+  const DEFAULT_CERTIFICATE_NUMBER = '9312-ANEF-IOMUQZJD'
+
+  const handleApplyDefault = () => {
+    setIssueDate(DEFAULT_ISSUE_DATE)
+    setCertificateNumber(DEFAULT_CERTIFICATE_NUMBER)
+    setValidationErrors({})
+  }
 
   // Certificate number formatting
   const formatCertificateNumber = (value: string): string => {
@@ -82,15 +92,15 @@ export function Proof({
     const errors: { issueDate?: string; certificateNumber?: string } = {}
 
     if (!issueDate) {
-      errors.issueDate = '발급일자를 입력해주세요'
+      errors.issueDate = 'please enter the issuance date'
     } else if (!/^\d{8}$/.test(issueDate)) {
-      errors.issueDate = 'YYYYMMDD 형식으로 입력해주세요'
+      errors.issueDate = 'please enter the issuance date in YYYYMMDD format'
     }
 
     if (!certificateNumber) {
-      errors.certificateNumber = '증명서번호를 입력해주세요'
+      errors.certificateNumber = 'please enter the certificate number'
     } else if (!/^\d{4}-[A-Z]{4}-[A-Z]{8}$/.test(certificateNumber)) {
-      errors.certificateNumber = '올바른 형식이 아닙니다 (XXXX-XXXX-XXXXXXXX)'
+      errors.certificateNumber = 'not a valid format (XXXX-XXXX-XXXXXXXX)'
     }
 
     setValidationErrors(errors)
@@ -149,6 +159,12 @@ export function Proof({
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Generate Proof</h2>
+        <button
+          onClick={handleApplyDefault}
+          disabled={!!proofResult?.success}
+          className="flex items-center gap-2 rounded-lg border border-primary/50 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition-all hover:bg-primary/20 disabled:cursor-not-allowed disabled:opacity-50 backdrop-blur-sm">
+          Apply Default
+        </button>
       </div>
 
       {/* Instructions */}
@@ -160,6 +176,118 @@ export function Proof({
           Enter the <b>Issuance Date</b> and <b>Certificate Number</b> displayed
           on the transfer confirmation certificate exactly.
         </p>
+      </div>
+
+      {/* Technical Explanation Dropdown */}
+      <div className="space-y-4 rounded-lg border border-border/50 bg-card/50 backdrop-blur overflow-hidden">
+        <button
+          onClick={() => setShowTechnicalExplain(!showTechnicalExplain)}
+          className="flex w-full items-center justify-between p-6 transition-all hover:bg-muted/30">
+          <h3 className="font-semibold text-foreground">
+            Show Technical Explain
+          </h3>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className={`transition-transform ${showTechnicalExplain ? 'rotate-180' : ''}`}>
+            <path d="m6 9 6 6 6-6" />
+          </svg>
+        </button>
+
+        {showTechnicalExplain && (
+          <div className="space-y-6 px-6 pb-6">
+            {/* Image */}
+            <div className="overflow-hidden rounded-lg border border-border/50 bg-background">
+              <img
+                src="/kcona_reclaim_explain_new.png"
+                alt="Solana Reclaim Technical Flow"
+                className="w-full h-auto"
+              />
+            </div>
+
+            {/* Explanations */}
+            <div className="space-y-3">
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                  1
+                </span>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">
+                    Encrypted Server Request:
+                  </span>{' '}
+                  User&apos;s request is encrypted and sent to the server
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                  2
+                </span>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">
+                    Encrypted Server Response:
+                  </span>{' '}
+                  Server returns encrypted response data
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                  3
+                </span>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">
+                    ZK Proof Generation without Personal Info:
+                  </span>{' '}
+                  Generate zero-knowledge proof that doesn&apos;s reveal
+                  personal information
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                  4
+                </span>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">
+                    User Proof Verification:
+                  </span>{' '}
+                  Verify the generated proof is valid
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                  5
+                </span>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">
+                    Proxy Signature:
+                  </span>{' '}
+                  Attestor proxy signs the verified proof
+                </p>
+              </div>
+
+              <div className="flex gap-3">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                  6
+                </span>
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-foreground">
+                    Submit Signed Data On-Chain:
+                  </span>{' '}
+                  Submit the signed proof data to Solana blockchain
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Form */}
