@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
@@ -7,6 +8,17 @@ import { Wallet, CheckCircle2 } from 'lucide-react'
 
 export function Connect() {
   const { connected, publicKey } = useWallet()
+  const [mounted, setMounted] = useState(false)
+
+  // Prevent hydration errors by only rendering wallet button on client
+
+  const handleMounted = () => {
+    setMounted(true)
+  }
+
+  useEffect(() => {
+    setTimeout(handleMounted, 0)
+  }, [])
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center gap-8 bg-background p-8">
@@ -68,9 +80,13 @@ export function Connect() {
 
       {/* Wallet Connection */}
       <div className="flex flex-col items-center gap-4">
-        <WalletMultiButton />
+        {mounted ? (
+          <WalletMultiButton />
+        ) : (
+          <div className="h-12 w-40 animate-pulse rounded-lg bg-muted/50" />
+        )}
 
-        {connected && publicKey && (
+        {mounted && connected && publicKey && (
           <div className="flex items-center gap-3 rounded-lg border border-primary/20 bg-card/50 px-6 py-4 backdrop-blur-sm">
             <CheckCircle2 className="h-5 w-5 text-primary" />
             <div>

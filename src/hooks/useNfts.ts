@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useWallet, useConnection } from '@solana/wallet-adapter-react'
-import { getNFTsWithMetadata } from '../lib/utils'
+import { getNFTsWithMetadata } from 'src/lib/utils'
 import { Sft, SftWithToken, Nft, NftWithToken } from '@metaplex-foundation/js'
 
 export type NftWithMetadata = {
